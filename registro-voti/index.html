@@ -280,7 +280,7 @@
 
     .student-row {
       display: grid;
-      grid-template-columns: 76px minmax(160px, 1fr) 92px 130px 72px;
+      grid-template-columns: 76px minmax(160px, 1fr) 92px 110px 72px;
       align-items: center;
       gap: 10px;
       padding: 10px 13px;
@@ -345,6 +345,7 @@
       transform: translateX(17px);
     }
 
+    .partial-box,
     .lode-box {
       display: flex;
       align-items: center;
@@ -352,12 +353,20 @@
       gap: 5px;
       font-size: 12px;
       white-space: nowrap;
+      cursor: pointer;
     }
 
+    .partial-box input,
     .lode-box input {
       accent-color: var(--burgundy);
       width: 17px;
       height: 17px;
+      flex: 0 0 auto;
+    }
+
+    .partial-box input:disabled,
+    .lode-box input:disabled {
+      cursor: not-allowed;
     }
 
     .empty {
@@ -549,7 +558,9 @@
       font-style: italic;
     }
 
-    /* STUDENTI PREVIEW */
+    /* ==========================
+       STUDENTI PREVIEW
+    ========================== */
 
     .preview-department {
       margin: 0 0 15px;
@@ -618,8 +629,14 @@
     }
 
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
+
+    /* ==========================
+       MOBILE
+    ========================== */
 
     @media (max-width: 760px) {
       .app {
@@ -651,7 +668,13 @@
       }
 
       .student-row {
-        grid-template-columns: 67px minmax(0,1fr) 68px 105px 60px;
+        grid-template-columns:
+          67px
+          minmax(0, 1fr)
+          68px
+          83px
+          60px;
+
         gap: 5px;
         padding: 8px 7px;
       }
@@ -660,8 +683,7 @@
         font-size: 12px;
       }
 
-      .student-row input[type="number"],
-      .student-row select {
+      .student-row input[type="number"] {
         min-height: 36px;
         padding: 6px;
         font-size: 11px;
@@ -686,9 +708,16 @@
         transform: translateX(15px);
       }
 
+      .partial-box,
       .lode-box {
-        gap: 2px;
+        gap: 3px;
         font-size: 10px;
+      }
+
+      .partial-box input,
+      .lode-box input {
+        width: 15px;
+        height: 15px;
       }
 
       .department-cards {
@@ -733,11 +762,34 @@
       }
 
       .student-row {
-        grid-template-columns: 62px minmax(85px,1fr) 54px 91px 49px;
+        grid-template-columns:
+          60px
+          minmax(75px, 1fr)
+          54px
+          68px
+          47px;
+
+        gap: 4px;
       }
 
       .student-name {
         font-size: 10.5px;
+      }
+
+      .partial-box {
+        font-size: 8px;
+        gap: 2px;
+      }
+
+      .lode-box {
+        font-size: 8px;
+        gap: 2px;
+      }
+
+      .partial-box input,
+      .lode-box input {
+        width: 14px;
+        height: 14px;
       }
 
       .lode-box span {
@@ -786,44 +838,63 @@
         <div id="successBox" class="success-box"></div>
 
         <div class="section">
-          <h2 class="section-title">Dati della lezione</h2>
+
+          <h2 class="section-title">
+            Dati della lezione
+          </h2>
 
           <div class="form-grid">
 
             <div class="field">
-              <label class="field-label required" for="teacher">Docente</label>
+              <label class="field-label required" for="teacher">
+                Docente
+              </label>
+
               <select id="teacher">
                 <option value="">Seleziona il docente</option>
               </select>
             </div>
 
             <div class="field">
-              <label class="field-label required" for="date">Data</label>
+              <label class="field-label required" for="date">
+                Data
+              </label>
+
               <input type="date" id="date">
             </div>
 
             <div class="field">
-              <label class="field-label required" for="subject">Materia</label>
+              <label class="field-label required" for="subject">
+                Materia
+              </label>
+
               <select id="subject">
                 <option value="">Seleziona la materia</option>
               </select>
             </div>
 
             <div class="field">
-              <label class="field-label required" for="lesson">Lezione</label>
+              <label class="field-label required" for="lesson">
+                Lezione
+              </label>
+
               <select id="lesson">
                 <option value="">Seleziona la lezione</option>
               </select>
             </div>
 
             <div class="field full">
-              <label class="field-label" for="title">Titolo facoltativo</label>
+              <label class="field-label" for="title">
+                Titolo facoltativo
+              </label>
+
               <input
                 type="text"
                 id="title"
                 maxlength="100"
                 placeholder="Es. Animagus"
               >
+
               <div class="hint">
                 Verrà mostrato insieme alla lezione nelle anteprime e nel registro.
               </div>
@@ -832,24 +903,37 @@
           </div>
         </div>
 
+
         <div class="section">
 
           <div class="student-toolbar">
-            <h2 class="section-title" style="margin:0; flex:1;">
+
+            <h2
+              class="section-title"
+              style="margin:0; flex:1;"
+            >
               Voti degli studenti
             </h2>
 
-            <span id="selectedCounter" class="counter">
+            <span
+              id="selectedCounter"
+              class="counter"
+            >
               0 svolti
             </span>
+
           </div>
 
           <div id="studentContainer"></div>
 
         </div>
 
+
         <div class="actions">
-          <button id="calculateButton" class="btn btn-primary">
+          <button
+            id="calculateButton"
+            class="btn btn-primary"
+          >
             Calcola punti
           </button>
         </div>
@@ -861,27 +945,53 @@
            REPARTI
       =========================== -->
 
-      <section id="tab-departments" class="tab-panel">
+      <section
+        id="tab-departments"
+        class="tab-panel"
+      >
 
-        <div id="departmentPreviewEmpty" class="empty">
-          Inserisci i voti e premi <strong>Calcola punti</strong>
+        <div
+          id="departmentPreviewEmpty"
+          class="empty"
+        >
+          Inserisci i voti e premi
+          <strong>Calcola punti</strong>
           per visualizzare il riepilogo dei reparti.
         </div>
 
-        <div id="departmentPreview" hidden>
 
-          <div class="academy-title">SALEM AUROR ACADEMY</div>
+        <div
+          id="departmentPreview"
+          hidden
+        >
 
-          <h2 id="departmentPreviewTitle" class="preview-title">
+          <div class="academy-title">
+            SALEM AUROR ACADEMY
+          </div>
+
+          <h2
+            id="departmentPreviewTitle"
+            class="preview-title"
+          >
             Punti della lezione
           </h2>
 
-          <div id="departmentPreviewMeta" class="preview-meta"></div>
+          <div
+            id="departmentPreviewMeta"
+            class="preview-meta"
+          ></div>
 
-          <div id="departmentCards" class="department-cards"></div>
+
+          <div
+            id="departmentCards"
+            class="department-cards"
+          ></div>
+
 
           <div class="score-table-wrap">
+
             <table class="score-table">
+
               <thead>
                 <tr>
                   <th>Calcolo</th>
@@ -891,22 +1001,35 @@
                   <th>M</th>
                 </tr>
               </thead>
+
               <tbody id="scoreTableBody"></tbody>
+
             </table>
+
           </div>
+
 
           <p class="preview-note">
             In caso di parità, i reparti ottengono lo stesso bonus previsto per quella posizione.
           </p>
 
+
           <div class="actions">
-            <button class="btn btn-secondary" id="backToInputFromDepartments">
+
+            <button
+              class="btn btn-secondary"
+              id="backToInputFromDepartments"
+            >
               Modifica
             </button>
 
-            <button class="btn btn-secondary" id="goStudents">
+            <button
+              class="btn btn-secondary"
+              id="goStudents"
+            >
               Guarda gli studenti
             </button>
+
           </div>
 
         </div>
@@ -918,41 +1041,73 @@
            STUDENTI
       =========================== -->
 
-      <section id="tab-students" class="tab-panel">
+      <section
+        id="tab-students"
+        class="tab-panel"
+      >
 
-        <div id="studentPreviewEmpty" class="empty">
+        <div
+          id="studentPreviewEmpty"
+          class="empty"
+        >
           Nessuna lezione pronta da visualizzare.
         </div>
 
-        <div id="studentPreview" hidden>
 
-          <div class="academy-title">SALEM AUROR ACADEMY</div>
+        <div
+          id="studentPreview"
+          hidden
+        >
 
-          <h2 id="studentPreviewTitle" class="preview-title">
+          <div class="academy-title">
+            SALEM AUROR ACADEMY
+          </div>
+
+          <h2
+            id="studentPreviewTitle"
+            class="preview-title"
+          >
             Voti
           </h2>
 
-          <div id="studentPreviewMeta" class="preview-meta"></div>
+          <div
+            id="studentPreviewMeta"
+            class="preview-meta"
+          ></div>
+
 
           <div id="studentPreviewDepartments"></div>
+
 
           <p class="preview-note">
             La media di reparto considera esclusivamente i compiti completi
             con voto pari o superiore a 16. Un 20 con lode vale 21 ai fini della media.
           </p>
 
+
           <div class="actions">
-            <button class="btn btn-secondary" id="backToInputFromStudents">
+
+            <button
+              class="btn btn-secondary"
+              id="backToInputFromStudents"
+            >
               Modifica
             </button>
 
-            <button class="btn btn-secondary" id="backDepartments">
+            <button
+              class="btn btn-secondary"
+              id="backDepartments"
+            >
               Guarda i reparti
             </button>
 
-            <button class="btn btn-primary" id="saveButton">
+            <button
+              class="btn btn-primary"
+              id="saveButton"
+            >
               Registra lezione
             </button>
+
           </div>
 
         </div>
@@ -967,12 +1122,14 @@
 
 
 <script>
+
 /* =========================================================
    CONFIGURAZIONE
 ========================================================= */
 
 const API_URL =
   'https://script.google.com/macros/s/AKfycbwvQ6utDOQki9EZJ1JGtAaUD99efBHxmrKhar9Z2hqMcymAFIqxx4cDxO1xyKhfsX5B/exec';
+
 
 const DEPARTMENTS = [
   'Duellanti',
@@ -981,12 +1138,6 @@ const DEPARTMENTS = [
   'Mutaforma'
 ];
 
-const SHORT_DEPARTMENTS = {
-  Duellanti: 'D',
-  Guaritori: 'G',
-  Legilimens: 'L',
-  Mutaforma: 'M'
-};
 
 let configuration = null;
 let calculatedLesson = null;
@@ -997,15 +1148,18 @@ let currentLessonId = null;
    AVVIO
 ========================================================= */
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener(
+  'DOMContentLoaded',
+  function () {
 
-  setupTabs();
-  setupButtons();
-  setToday();
+    setupTabs();
+    setupButtons();
+    setToday();
 
-  loadConfiguration();
+    loadConfiguration();
 
-});
+  }
+);
 
 
 /* =========================================================
@@ -1017,60 +1171,83 @@ function loadConfiguration() {
   const callbackName =
     'salemConfig_' + Date.now();
 
+
   const script =
     document.createElement('script');
 
-  const timeout = setTimeout(function () {
 
-    cleanup();
+  const timeout =
+    setTimeout(function () {
 
-    showConnectionError(
-      'Impossibile collegarsi al registro.'
-    );
-
-  }, 15000);
-
-
-  window[callbackName] = function (data) {
-
-    clearTimeout(timeout);
-    cleanup();
-
-    if (!data || data.ok !== true) {
+      cleanup();
 
       showConnectionError(
-        data && data.error
-          ? data.error
-          : 'Configurazione non disponibile.'
+        'Impossibile collegarsi al registro.'
       );
 
-      return;
-    }
+    }, 15000);
 
-    configuration = data;
 
-    populateConfiguration();
-    renderStudents();
+  window[callbackName] =
+    function (data) {
 
-    document.getElementById('loading').hidden = true;
-    document.getElementById('appContent').hidden = false;
+      clearTimeout(timeout);
+      cleanup();
 
-    const updated =
-      data.updatedAt
-        ? new Date(data.updatedAt).toLocaleString('it-IT')
-        : '';
 
-    const status =
-      document.getElementById('connectionStatus');
+      if (!data || data.ok !== true) {
 
-    status.classList.add('ok');
+        showConnectionError(
+          data && data.error
+            ? data.error
+            : 'Configurazione non disponibile.'
+        );
 
-    document.getElementById('connectionText').textContent =
-      updated
-        ? 'Registro collegato · ultimo aggiornamento ' + updated
-        : 'Registro collegato';
+        return;
+      }
 
-  };
+
+      configuration = data;
+
+      populateConfiguration();
+      renderStudents();
+
+
+      document.getElementById(
+        'loading'
+      ).hidden = true;
+
+
+      document.getElementById(
+        'appContent'
+      ).hidden = false;
+
+
+      const updated =
+        data.updatedAt
+          ? new Date(
+              data.updatedAt
+            ).toLocaleString('it-IT')
+          : '';
+
+
+      const status =
+        document.getElementById(
+          'connectionStatus'
+        );
+
+
+      status.classList.add('ok');
+
+
+      document.getElementById(
+        'connectionText'
+      ).textContent =
+        updated
+          ? 'Registro collegato · ultimo aggiornamento ' + updated
+          : 'Registro collegato';
+
+    };
 
 
   script.src =
@@ -1080,16 +1257,19 @@ function loadConfiguration() {
     '&_=' +
     Date.now();
 
-  script.onerror = function () {
 
-    clearTimeout(timeout);
-    cleanup();
+  script.onerror =
+    function () {
 
-    showConnectionError(
-      'Errore durante il collegamento al registro.'
-    );
+      clearTimeout(timeout);
+      cleanup();
 
-  };
+      showConnectionError(
+        'Errore durante il collegamento al registro.'
+      );
+
+    };
+
 
   document.body.appendChild(script);
 
@@ -1113,16 +1293,25 @@ function loadConfiguration() {
 
 function showConnectionError(message) {
 
-  document.getElementById('loading').innerHTML =
+  document.getElementById(
+    'loading'
+  ).innerHTML =
     '<strong>Errore di collegamento</strong><br><br>' +
     escapeHtml(message);
 
+
   const status =
-    document.getElementById('connectionStatus');
+    document.getElementById(
+      'connectionStatus'
+    );
+
 
   status.classList.add('error');
 
-  document.getElementById('connectionText').textContent =
+
+  document.getElementById(
+    'connectionText'
+  ).textContent =
     'Registro non collegato';
 
 }
@@ -1144,70 +1333,109 @@ function populateConfiguration() {
     document.getElementById('lesson');
 
 
-  configuration.teachers.forEach(function (item) {
+  configuration.teachers.forEach(
+    function (item) {
 
-    const option =
-      document.createElement('option');
+      const option =
+        document.createElement('option');
 
-    option.value = item.teacher;
-    option.textContent = item.teacher;
+      option.value =
+        item.teacher;
 
-    teacher.appendChild(option);
+      option.textContent =
+        item.teacher;
 
-  });
+      teacher.appendChild(option);
 
-
-  getSubjects().forEach(function (name) {
-
-    const option =
-      document.createElement('option');
-
-    option.value = name;
-    option.textContent = name;
-
-    subject.appendChild(option);
-
-  });
-
-
-  configuration.lessons.forEach(function (name) {
-
-    const option =
-      document.createElement('option');
-
-    option.value = name;
-    option.textContent = name;
-
-    lesson.appendChild(option);
-
-  });
-
-
-  teacher.addEventListener('change', function () {
-
-    const item =
-      configuration.teachers.find(function (entry) {
-        return entry.teacher === teacher.value;
-      });
-
-    if (item) {
-      subject.value = item.subject;
-    } else {
-      subject.value = '';
     }
-
-    invalidateCalculation();
-
-  });
+  );
 
 
-  subject.addEventListener('change', invalidateCalculation);
-  lesson.addEventListener('change', invalidateCalculation);
-  document.getElementById('date')
-    .addEventListener('change', invalidateCalculation);
+  getSubjects().forEach(
+    function (name) {
 
-  document.getElementById('title')
-    .addEventListener('input', invalidateCalculation);
+      const option =
+        document.createElement('option');
+
+      option.value = name;
+      option.textContent = name;
+
+      subject.appendChild(option);
+
+    }
+  );
+
+
+  configuration.lessons.forEach(
+    function (name) {
+
+      const option =
+        document.createElement('option');
+
+      option.value = name;
+      option.textContent = name;
+
+      lesson.appendChild(option);
+
+    }
+  );
+
+
+  teacher.addEventListener(
+    'change',
+    function () {
+
+      const item =
+        configuration.teachers.find(
+          function (entry) {
+            return (
+              entry.teacher ===
+              teacher.value
+            );
+          }
+        );
+
+
+      if (item) {
+        subject.value =
+          item.subject;
+      } else {
+        subject.value = '';
+      }
+
+
+      invalidateCalculation();
+
+    }
+  );
+
+
+  subject.addEventListener(
+    'change',
+    invalidateCalculation
+  );
+
+
+  lesson.addEventListener(
+    'change',
+    invalidateCalculation
+  );
+
+
+  document.getElementById(
+    'date'
+  ).addEventListener(
+    'change',
+    invalidateCalculation
+  );
+
+
+  document.getElementById(
+    'title'
+  ).addEventListener(
+    'input',
+    invalidateCalculation
+  );
 
 }
 
@@ -1216,13 +1444,20 @@ function getSubjects() {
 
   return [
     ...new Set(
-      configuration.teachers.map(function (item) {
-        return item.subject;
-      })
+      configuration.teachers.map(
+        function (item) {
+          return item.subject;
+        }
+      )
     )
-  ].sort(function (a, b) {
-    return a.localeCompare(b, 'it');
-  });
+  ].sort(
+    function (a, b) {
+      return a.localeCompare(
+        b,
+        'it'
+      );
+    }
+  );
 
 }
 
@@ -1234,52 +1469,74 @@ function getSubjects() {
 function renderStudents() {
 
   const container =
-    document.getElementById('studentContainer');
+    document.getElementById(
+      'studentContainer'
+    );
+
 
   container.innerHTML = '';
 
 
-  DEPARTMENTS.forEach(function (department) {
+  DEPARTMENTS.forEach(
+    function (department) {
 
-    const names =
-      configuration.students[department] || [];
-
-    if (!names.length) {
-      return;
-    }
-
-
-    const block =
-      document.createElement('div');
-
-    block.className = 'department-input';
+      const names =
+        configuration.students[
+          department
+        ] || [];
 
 
-    const header =
-      document.createElement('div');
-
-    header.className =
-      'department-input-header';
-
-    header.innerHTML =
-      '<span>' + escapeHtml(department) + '</span>' +
-      '<span>' + names.length + ' studenti</span>';
-
-    block.appendChild(header);
+      if (!names.length) {
+        return;
+      }
 
 
-    names.forEach(function (name) {
+      const block =
+        document.createElement('div');
 
-      block.appendChild(
-        createStudentRow(name, department)
+
+      block.className =
+        'department-input';
+
+
+      const header =
+        document.createElement('div');
+
+
+      header.className =
+        'department-input-header';
+
+
+      header.innerHTML =
+        '<span>' +
+        escapeHtml(department) +
+        '</span>' +
+        '<span>' +
+        names.length +
+        ' studenti</span>';
+
+
+      block.appendChild(header);
+
+
+      names.forEach(
+        function (name) {
+
+          block.appendChild(
+            createStudentRow(
+              name,
+              department
+            )
+          );
+
+        }
       );
 
-    });
 
+      container.appendChild(block);
 
-    container.appendChild(block);
-
-  });
+    }
+  );
 
 
   updateSelectedCounter();
@@ -1287,29 +1544,53 @@ function renderStudents() {
 }
 
 
-function createStudentRow(name, department) {
+function createStudentRow(
+  name,
+  department
+) {
 
   const row =
     document.createElement('div');
 
-  row.className = 'student-row';
 
-  row.dataset.name = name;
-  row.dataset.department = department;
+  row.className =
+    'student-row';
+
+
+  row.dataset.name =
+    name;
+
+
+  row.dataset.department =
+    department;
 
 
   row.innerHTML = `
+
     <label class="toggle-wrap">
+
       <span class="toggle">
-        <input type="checkbox" class="student-done">
+
+        <input
+          type="checkbox"
+          class="student-done"
+        >
+
         <span class="slider"></span>
+
       </span>
-      <span class="done-label">Non svolto</span>
+
+      <span class="done-label">
+        Non svolto
+      </span>
+
     </label>
+
 
     <div class="student-name">
       ${escapeHtml(name)}
     </div>
+
 
     <input
       class="student-grade"
@@ -1317,75 +1598,138 @@ function createStudentRow(name, department) {
       min="1"
       max="20"
       step="any"
-      inputmode="numeric"
+      inputmode="decimal"
       placeholder="Voto"
       disabled
     >
 
-    <select class="student-delivery" disabled>
-      <option value="">Consegna</option>
-      <option value="Completo">Completo</option>
-      <option value="Parziale">Parziale</option>
-    </select>
+
+    <label class="partial-box">
+
+      <input
+        type="checkbox"
+        class="student-partial"
+        disabled
+      >
+
+      <span>Parziale?</span>
+
+    </label>
+
 
     <label class="lode-box">
+
       <input
         type="checkbox"
         class="student-praise"
         disabled
       >
+
       <span>Lode</span>
+
     </label>
+
   `;
 
 
   const done =
-    row.querySelector('.student-done');
+    row.querySelector(
+      '.student-done'
+    );
+
 
   const grade =
-    row.querySelector('.student-grade');
+    row.querySelector(
+      '.student-grade'
+    );
 
-  const delivery =
-    row.querySelector('.student-delivery');
+
+  const partial =
+    row.querySelector(
+      '.student-partial'
+    );
+
 
   const praise =
-    row.querySelector('.student-praise');
+    row.querySelector(
+      '.student-praise'
+    );
+
 
   const label =
-    row.querySelector('.done-label');
+    row.querySelector(
+      '.done-label'
+    );
 
 
-  done.addEventListener('change', function () {
+  done.addEventListener(
+    'change',
+    function () {
 
-    const enabled = done.checked;
-
-    grade.disabled = !enabled;
-    delivery.disabled = !enabled;
-    praise.disabled = !enabled;
-
-    row.classList.toggle('active', enabled);
-
-    label.textContent =
-      enabled ? 'Svolto' : 'Non svolto';
+      const enabled =
+        done.checked;
 
 
-    if (!enabled) {
+      grade.disabled =
+        !enabled;
 
-      grade.value = '';
-      delivery.value = '';
-      praise.checked = false;
+
+      partial.disabled =
+        !enabled;
+
+
+      praise.disabled =
+        !enabled;
+
+
+      row.classList.toggle(
+        'active',
+        enabled
+      );
+
+
+      label.textContent =
+        enabled
+          ? 'Svolto'
+          : 'Non svolto';
+
+
+      if (!enabled) {
+
+        grade.value = '';
+
+        partial.checked =
+          false;
+
+        praise.checked =
+          false;
+
+      }
+
+
+      updateSelectedCounter();
+      invalidateCalculation();
 
     }
-
-    updateSelectedCounter();
-    invalidateCalculation();
-
-  });
+  );
 
 
-  grade.addEventListener('input', invalidateCalculation);
-  delivery.addEventListener('change', invalidateCalculation);
-  praise.addEventListener('change', invalidateCalculation);
+  grade.addEventListener(
+    'input',
+    invalidateCalculation
+  );
+
+
+  partial.addEventListener(
+    'change',
+    invalidateCalculation
+  );
+
+
+  praise.addEventListener(
+    'change',
+    invalidateCalculation
+  );
 
 
   return row;
@@ -1399,6 +1743,7 @@ function updateSelectedCounter() {
     document.querySelectorAll(
       '.student-done:checked'
     ).length;
+
 
   document.getElementById(
     'selectedCounter'
@@ -1420,52 +1765,82 @@ function collectFormData() {
 
 
   const date =
-    document.getElementById('date').value;
+    document.getElementById(
+      'date'
+    ).value;
+
 
   const teacher =
-    document.getElementById('teacher').value;
+    document.getElementById(
+      'teacher'
+    ).value;
+
 
   const subject =
-    document.getElementById('subject').value;
+    document.getElementById(
+      'subject'
+    ).value;
+
 
   const lesson =
-    document.getElementById('lesson').value;
+    document.getElementById(
+      'lesson'
+    ).value;
+
 
   const title =
-    document.getElementById('title').value.trim();
+    document.getElementById(
+      'title'
+    ).value.trim();
 
 
   if (!teacher) {
-    throw new Error('Seleziona il docente.');
+    throw new Error(
+      'Seleziona il docente.'
+    );
   }
+
 
   if (!date) {
-    throw new Error('Inserisci la data della lezione.');
+    throw new Error(
+      'Inserisci la data della lezione.'
+    );
   }
+
 
   if (!subject) {
-    throw new Error('Seleziona la materia.');
+    throw new Error(
+      'Seleziona la materia.'
+    );
   }
 
+
   if (!lesson) {
-    throw new Error('Seleziona la lezione.');
+    throw new Error(
+      'Seleziona la lezione.'
+    );
   }
 
 
   const validPair =
-    configuration.teachers.some(function (item) {
+    configuration.teachers.some(
+      function (item) {
 
-      return (
-        item.teacher === teacher &&
-        item.subject === subject
-      );
+        return (
+          item.teacher === teacher &&
+          item.subject === subject
+        );
 
-    });
+      }
+    );
+
 
   if (!validPair) {
+
     throw new Error(
       'La materia selezionata non corrisponde al docente.'
     );
+
   }
 
 
@@ -1473,88 +1848,152 @@ function collectFormData() {
 
 
   document
-    .querySelectorAll('.student-row')
-    .forEach(function (row) {
+    .querySelectorAll(
+      '.student-row'
+    )
+    .forEach(
+      function (row) {
 
-      const done =
-        row.querySelector('.student-done');
+        const done =
+          row.querySelector(
+            '.student-done'
+          );
 
-      if (!done.checked) {
-        return;
+
+        if (!done.checked) {
+          return;
+        }
+
+
+        const gradeValue =
+          row.querySelector(
+            '.student-grade'
+          ).value;
+
+
+        const partial =
+          row.querySelector(
+            '.student-partial'
+          ).checked;
+
+
+        /*
+         * La checkbox funziona al contrario:
+         *
+         * SPENTA  = Completo
+         * ATTIVA  = Parziale
+         */
+
+        const delivery =
+          partial
+            ? 'Parziale'
+            : 'Completo';
+
+
+        const praise =
+          row.querySelector(
+            '.student-praise'
+          ).checked;
+
+
+        if (
+          gradeValue === ''
+        ) {
+
+          throw new Error(
+            'Inserisci il voto di ' +
+            row.dataset.name +
+            '.'
+          );
+
+        }
+
+
+        const grade =
+          Number(gradeValue);
+
+
+        /*
+         * I DECIMALI SONO AMMESSI.
+         *
+         * Esempi validi:
+         * 16
+         * 16.5
+         * 17.25
+         * 19.5
+         * 20
+         */
+
+        if (
+          !Number.isFinite(grade) ||
+          grade < 1 ||
+          grade > 20
+        ) {
+
+          throw new Error(
+            'Il voto di ' +
+            row.dataset.name +
+            ' deve essere compreso tra 1 e 20.'
+          );
+
+        }
+
+
+        students.push({
+
+          name:
+            row.dataset.name,
+
+          department:
+            row.dataset.department,
+
+          grade:
+            grade,
+
+          delivery:
+            delivery,
+
+          praise:
+            praise,
+
+          notes:
+            ''
+
+        });
+
       }
-
-
-      const gradeValue =
-        row.querySelector('.student-grade').value;
-
-      const delivery =
-        row.querySelector('.student-delivery').value;
-
-      const praise =
-        row.querySelector('.student-praise').checked;
-
-
-      if (gradeValue === '') {
-        throw new Error(
-          'Inserisci il voto di ' +
-          row.dataset.name +
-          '.'
-        );
-      }
-
-
-      const grade =
-        Number(gradeValue);
-
-
-      if (
-  !Number.isFinite(grade) ||
-  grade < 1 ||
-  grade > 20
-) {
-  throw new Error(
-    'Il voto di ' +
-    row.dataset.name +
-    ' deve essere compreso tra 1 e 20.'
-  );
-      }
-
-
-      if (!delivery) {
-        throw new Error(
-          'Seleziona Completo o Parziale per ' +
-          row.dataset.name +
-          '.'
-        );
-      }
-
-
-      students.push({
-        name: row.dataset.name,
-        department: row.dataset.department,
-        grade: grade,
-        delivery: delivery,
-        praise: praise,
-        notes: ''
-      });
-
-    });
+    );
 
 
   if (!students.length) {
+
     throw new Error(
       'Seleziona almeno uno studente che ha svolto il compito.'
     );
+
   }
 
 
   return {
-    date: date,
-    teacher: teacher,
-    subject: subject,
-    lesson: lesson,
-    title: title,
-    students: students
+
+    date:
+      date,
+
+    teacher:
+      teacher,
+
+    subject:
+      subject,
+
+    lesson:
+      lesson,
+
+    title:
+      title,
+
+    students:
+      students
+
   };
 
 }
@@ -1571,13 +2010,20 @@ function calculateLesson() {
     const data =
       collectFormData();
 
+
     const departments =
-      calculateDepartments(data.students);
+      calculateDepartments(
+        data.students
+      );
 
 
     calculatedLesson = {
+
       ...data,
-      departments: departments
+
+      departments:
+        departments
+
     };
 
 
@@ -1591,200 +2037,326 @@ function calculateLesson() {
     renderDepartmentPreview();
     renderStudentPreview();
 
-    switchTab('departments');
+
+    switchTab(
+      'departments'
+    );
 
 
   } catch (error) {
 
-    showError(error.message);
-    switchTab('input');
+    showError(
+      error.message
+    );
+
+
+    switchTab(
+      'input'
+    );
 
   }
 
 }
 
 
-function calculateDepartments(students) {
+function calculateDepartments(
+  students
+) {
 
   const results =
-    DEPARTMENTS.map(function (department) {
+    DEPARTMENTS.map(
+      function (department) {
 
-      const all =
-        students.filter(function (student) {
-          return student.department === department;
-        });
+        const all =
+          students.filter(
+            function (student) {
 
+              return (
+                student.department ===
+                department
+              );
 
-      const complete =
-        all.filter(function (student) {
-          return student.delivery === 'Completo';
-        });
-
-
-      const partial =
-        all.filter(function (student) {
-          return student.delivery === 'Parziale';
-        });
+            }
+          );
 
 
-      /*
-       * MEDIA:
-       * - solo Completi
-       * - voto >= 16
-       * - 20 + lode vale 21
-       * - arrotondamento SEMPRE per eccesso
-       *   al primo decimale
-       */
+        const complete =
+          all.filter(
+            function (student) {
 
-      const validForAverage =
-        complete
-          .map(function (student) {
+              return (
+                student.delivery ===
+                'Completo'
+              );
 
-            return {
-              ...student,
-              effectiveGrade:
+            }
+          );
+
+
+        const partial =
+          all.filter(
+            function (student) {
+
+              return (
+                student.delivery ===
+                'Parziale'
+              );
+
+            }
+          );
+
+
+        /*
+         * MEDIA DI REPARTO
+         *
+         * - considera SOLO i completi
+         * - considera SOLO voti >= 16
+         * - 20 + lode vale 21
+         * - gli altri voti con lode mantengono
+         *   il proprio valore
+         * - arrotondamento SEMPRE PER ECCESSO
+         *   al primo decimale
+         */
+
+        const validForAverage =
+          complete
+
+            .map(
+              function (student) {
+
+                return {
+
+                  ...student,
+
+                  effectiveGrade:
+                    student.grade === 20 &&
+                    student.praise
+                      ? 21
+                      : student.grade
+
+                };
+
+              }
+            )
+
+            .filter(
+              function (student) {
+
+                return (
+                  student.effectiveGrade >=
+                  16
+                );
+
+              }
+            );
+
+
+        let average = 0;
+
+
+        if (
+          validForAverage.length
+        ) {
+
+          const sum =
+            validForAverage.reduce(
+
+              function (
+                total,
+                student
+              ) {
+
+                return (
+                  total +
+                  student.effectiveGrade
+                );
+
+              },
+
+              0
+
+            );
+
+
+          average =
+            Math.ceil(
+              (
+                sum /
+                validForAverage.length
+              ) * 10
+            ) / 10;
+
+        }
+
+
+        const praises =
+          all.filter(
+            function (student) {
+
+              return student.praise;
+
+            }
+          ).length;
+
+
+        const has21 =
+          all.some(
+            function (student) {
+
+              return (
                 student.grade === 20 &&
                 student.praise
-                  ? 21
-                  : student.grade
-            };
+              );
 
-          })
-          .filter(function (student) {
-            return student.effectiveGrade >= 16;
-          });
-
-
-      let average = 0;
-
-      if (validForAverage.length) {
-
-        const sum =
-          validForAverage.reduce(
-            function (total, student) {
-              return total + student.effectiveGrade;
-            },
-            0
+            }
           );
 
-        average =
-          Math.ceil(
-            (sum / validForAverage.length) * 10
-          ) / 10;
+
+        return {
+
+          department:
+            department,
+
+          average:
+            average,
+
+          assignments:
+            all.length,
+
+          complete:
+            complete.length,
+
+          partial:
+            partial.length,
+
+          has21:
+            has21 ? 1 : 0,
+
+          praises:
+            praises,
+
+          averagePoints:
+            roundPoint(
+              average * 3
+            ),
+
+          assignmentPoints:
+            all.length * 2,
+
+          completePoints:
+            complete.length * 3,
+
+          bonus21:
+            has21 ? 10 : 0,
+
+          bonusAverage:
+            0,
+
+          bonusPraise:
+            0,
+
+          bonusQuantity:
+            0,
+
+          bonusComplete:
+            0,
+
+          total:
+            0
+
+        };
 
       }
-
-
-      const praises =
-        all.filter(function (student) {
-          return student.praise;
-        }).length;
-
-
-      const has21 =
-        all.some(function (student) {
-          return (
-            student.grade === 20 &&
-            student.praise
-          );
-        });
-
-
-      return {
-        department: department,
-
-        average: average,
-
-        assignments: all.length,
-
-        complete: complete.length,
-
-        partial: partial.length,
-
-        has21: has21 ? 1 : 0,
-
-        praises: praises,
-
-        averagePoints: roundPoint(average * 3),
-
-        assignmentPoints: all.length * 2,
-
-        completePoints: complete.length * 3,
-
-        bonus21: has21 ? 10 : 0,
-
-        bonusAverage: 0,
-
-        bonusPraise: 0,
-
-        bonusQuantity: 0,
-
-        bonusComplete: 0,
-
-        total: 0
-      };
-
-    });
+    );
 
 
   /*
    * CLASSIFICA MEDIA
+   *
    * 1° valore distinto = 15
    * 2° valore distinto = 5
    */
 
   applyRankingBonus(
+
     results,
+
     'average',
+
     'bonusAverage',
+
     [15, 5],
+
     false
+
   );
 
 
   /*
    * PIÙ LODI
+   *
    * reparto/i con più lodi = 5
-   * nessun bonus se non esistono lodi
+   * se nessuno ha lodi, nessun bonus
    */
 
   const maxPraises =
     Math.max(
-      ...results.map(function (r) {
-        return r.praises;
-      })
+      ...results.map(
+        function (result) {
+          return result.praises;
+        }
+      )
     );
 
-  if (maxPraises > 0) {
 
-    results.forEach(function (result) {
+  if (
+    maxPraises > 0
+  ) {
 
-      if (result.praises === maxPraises) {
-        result.bonusPraise = 5;
+    results.forEach(
+      function (result) {
+
+        if (
+          result.praises ===
+          maxPraises
+        ) {
+
+          result.bonusPraise =
+            5;
+
+        }
+
       }
-
-    });
+    );
 
   }
 
 
   /*
    * QUANTITÀ COMPITI
+   *
    * 1° valore distinto = 10
    * 2° valore distinto = 5
    */
 
   applyRankingBonus(
+
     results,
+
     'assignments',
+
     'bonusQuantity',
+
     [10, 5],
+
     false
+
   );
 
 
   /*
    * CLASSIFICA COMPLETI
+   *
    * 1° = 20
    * 2° = 15
    * 3° = 10
@@ -1792,29 +2364,46 @@ function calculateDepartments(students) {
    */
 
   applyRankingBonus(
+
     results,
+
     'complete',
+
     'bonusComplete',
+
     [20, 15, 10, 5],
+
     true
+
   );
 
 
-  results.forEach(function (result) {
+  results.forEach(
+    function (result) {
 
-    result.total =
-      roundPoint(
-        result.averagePoints +
-        result.assignmentPoints +
-        result.completePoints +
-        result.bonus21 +
-        result.bonusAverage +
-        result.bonusPraise +
-        result.bonusQuantity +
-        result.bonusComplete
-      );
+      result.total =
+        roundPoint(
 
-  });
+          result.averagePoints +
+
+          result.assignmentPoints +
+
+          result.completePoints +
+
+          result.bonus21 +
+
+          result.bonusAverage +
+
+          result.bonusPraise +
+
+          result.bonusQuantity +
+
+          result.bonusComplete
+
+        );
+
+    }
+  );
 
 
   return results;
@@ -1831,56 +2420,92 @@ function applyRankingBonus(
 ) {
 
   let values =
-    results.map(function (result) {
-      return Number(result[valueKey]) || 0;
-    });
+    results.map(
+      function (result) {
+
+        return (
+          Number(
+            result[valueKey]
+          ) || 0
+        );
+
+      }
+    );
 
 
   if (!includeZero) {
-    values = values.filter(function (value) {
-      return value > 0;
-    });
+
+    values =
+      values.filter(
+        function (value) {
+
+          return value > 0;
+
+        }
+      );
+
   }
 
 
   const distinct =
     [...new Set(values)]
-      .sort(function (a, b) {
-        return b - a;
-      });
+      .sort(
+        function (a, b) {
+          return b - a;
+        }
+      );
 
 
-  results.forEach(function (result) {
+  results.forEach(
+    function (result) {
 
-    const value =
-      Number(result[valueKey]) || 0;
+      const value =
+        Number(
+          result[valueKey]
+        ) || 0;
 
 
-    if (!includeZero && value <= 0) {
-      result[bonusKey] = 0;
-      return;
+      if (
+        !includeZero &&
+        value <= 0
+      ) {
+
+        result[bonusKey] =
+          0;
+
+        return;
+
+      }
+
+
+      const position =
+        distinct.indexOf(
+          value
+        );
+
+
+      result[bonusKey] =
+        position >= 0 &&
+        position < bonuses.length
+          ? bonuses[position]
+          : 0;
+
     }
-
-
-    const position =
-      distinct.indexOf(value);
-
-
-    result[bonusKey] =
-      position >= 0 && position < bonuses.length
-        ? bonuses[position]
-        : 0;
-
-  });
+  );
 
 }
 
 
 function roundPoint(value) {
 
-  return Math.round(
-    (Number(value) + Number.EPSILON) * 10
-  ) / 10;
+  return (
+    Math.round(
+      (
+        Number(value) +
+        Number.EPSILON
+      ) * 10
+    ) / 10
+  );
 
 }
 
@@ -1898,6 +2523,7 @@ function renderDepartmentPreview() {
   document.getElementById(
     'departmentPreviewEmpty'
   ).hidden = true;
+
 
   document.getElementById(
     'departmentPreview'
@@ -1923,46 +2549,93 @@ function renderDepartmentPreview() {
       'departmentCards'
     );
 
+
   cards.innerHTML = '';
 
 
-  lesson.departments.forEach(function (dep) {
+  lesson.departments.forEach(
+    function (dep) {
 
-    const card =
-      document.createElement('div');
+      const card =
+        document.createElement(
+          'div'
+        );
 
-    card.className =
-      'department-card';
 
-    card.innerHTML = `
-      <div class="name">
-        ${escapeHtml(dep.department)}
-      </div>
+      card.className =
+        'department-card';
 
-      <div class="points">
-        ${formatNumber(dep.total)}
-      </div>
 
-      <div class="points-label">
-        punti
-      </div>
-    `;
+      card.innerHTML = `
 
-    cards.appendChild(card);
+        <div class="name">
+          ${escapeHtml(dep.department)}
+        </div>
 
-  });
+        <div class="points">
+          ${formatNumber(dep.total)}
+        </div>
+
+        <div class="points-label">
+          punti
+        </div>
+
+      `;
+
+
+      cards.appendChild(card);
+
+    }
+  );
 
 
   const rows = [
-    ['Media × 3', 'averagePoints'],
-    ['Ogni compito × 2', 'assignmentPoints'],
-    ['Ogni completo × 3', 'completePoints'],
-    ['Almeno un 21', 'bonus21'],
-    ['Classifica media', 'bonusAverage'],
-    ['Più lodi', 'bonusPraise'],
-    ['Quantità compiti', 'bonusQuantity'],
-    ['Classifica completi', 'bonusComplete'],
-    ['Totale', 'total']
+
+    [
+      'Media × 3',
+      'averagePoints'
+    ],
+
+    [
+      'Ogni compito × 2',
+      'assignmentPoints'
+    ],
+
+    [
+      'Ogni completo × 3',
+      'completePoints'
+    ],
+
+    [
+      'Almeno un 21',
+      'bonus21'
+    ],
+
+    [
+      'Classifica media',
+      'bonusAverage'
+    ],
+
+    [
+      'Più lodi',
+      'bonusPraise'
+    ],
+
+    [
+      'Quantità compiti',
+      'bonusQuantity'
+    ],
+
+    [
+      'Classifica completi',
+      'bonusComplete'
+    ],
+
+    [
+      'Totale',
+      'total'
+    ]
+
   ];
 
 
@@ -1971,41 +2644,70 @@ function renderDepartmentPreview() {
       'scoreTableBody'
     );
 
+
   tbody.innerHTML = '';
 
 
-  rows.forEach(function (rowInfo) {
+  rows.forEach(
+    function (rowInfo) {
 
-    const tr =
-      document.createElement('tr');
-
-    if (rowInfo[1] === 'total') {
-      tr.className = 'total-row';
-    }
-
-
-    const cells =
-      lesson.departments.map(function (dep) {
-        return formatNumber(
-          dep[rowInfo[1]]
+      const tr =
+        document.createElement(
+          'tr'
         );
-      });
 
 
-    tr.innerHTML =
-      '<td>' +
-      escapeHtml(rowInfo[0]) +
-      '</td>' +
-      cells
-        .map(function (value) {
-          return '<td>' + value + '</td>';
-        })
-        .join('');
+      if (
+        rowInfo[1] ===
+        'total'
+      ) {
+
+        tr.className =
+          'total-row';
+
+      }
 
 
-    tbody.appendChild(tr);
+      const cells =
+        lesson.departments.map(
+          function (dep) {
 
-  });
+            return formatNumber(
+              dep[
+                rowInfo[1]
+              ]
+            );
+
+          }
+        );
+
+
+      tr.innerHTML =
+        '<td>' +
+        escapeHtml(
+          rowInfo[0]
+        ) +
+        '</td>' +
+
+        cells
+          .map(
+            function (value) {
+
+              return (
+                '<td>' +
+                value +
+                '</td>'
+              );
+
+            }
+          )
+          .join('');
+
+
+      tbody.appendChild(tr);
+
+    }
+  );
 
 }
 
@@ -2023,6 +2725,7 @@ function renderStudentPreview() {
   document.getElementById(
     'studentPreviewEmpty'
   ).hidden = true;
+
 
   document.getElementById(
     'studentPreview'
@@ -2048,95 +2751,150 @@ function renderStudentPreview() {
       'studentPreviewDepartments'
     );
 
+
   container.innerHTML = '';
 
 
-  DEPARTMENTS.forEach(function (department) {
+  DEPARTMENTS.forEach(
+    function (department) {
 
-    const students =
-      lesson.students.filter(function (student) {
-        return student.department === department;
-      });
+      const students =
+        lesson.students.filter(
+          function (student) {
+
+            return (
+              student.department ===
+              department
+            );
+
+          }
+        );
 
 
-    if (!students.length) {
-      return;
+      if (!students.length) {
+        return;
+      }
+
+
+      const block =
+        document.createElement(
+          'div'
+        );
+
+
+      block.className =
+        'preview-department';
+
+
+      const title =
+        document.createElement(
+          'h3'
+        );
+
+
+      title.textContent =
+        department;
+
+
+      block.appendChild(
+        title
+      );
+
+
+      students.forEach(
+        function (student) {
+
+          const row =
+            document.createElement(
+              'div'
+            );
+
+
+          row.className =
+            'preview-student';
+
+
+          let gradeDisplay =
+            formatNumber(
+              student.grade
+            );
+
+
+          if (
+            student.grade === 20 &&
+            student.praise
+          ) {
+
+            gradeDisplay =
+              '21★';
+
+          } else if (
+            student.praise
+          ) {
+
+            gradeDisplay =
+              formatNumber(
+                student.grade
+              ) + '★';
+
+          }
+
+
+          const info = [
+
+            'Compito ' +
+            student.delivery
+              .toLowerCase()
+
+          ];
+
+
+          if (
+            student.praise
+          ) {
+
+            info.push(
+              'con lode'
+            );
+
+          }
+
+
+          row.innerHTML = `
+
+            <div>
+
+              <div class="preview-student-name">
+                ${escapeHtml(student.name)}
+              </div>
+
+              <div class="preview-student-info">
+                ${escapeHtml(info.join(' · '))}
+              </div>
+
+            </div>
+
+            <div class="grade-badge">
+              ${escapeHtml(String(gradeDisplay))}
+            </div>
+
+          `;
+
+
+          block.appendChild(
+            row
+          );
+
+        }
+      );
+
+
+      container.appendChild(
+        block
+      );
+
     }
-
-
-    const block =
-      document.createElement('div');
-
-    block.className =
-      'preview-department';
-
-
-    const title =
-      document.createElement('h3');
-
-    title.textContent = department;
-
-    block.appendChild(title);
-
-
-    students.forEach(function (student) {
-
-      const row =
-        document.createElement('div');
-
-      row.className =
-        'preview-student';
-
-
-      let gradeDisplay =
-        student.grade;
-
-      if (
-        student.grade === 20 &&
-        student.praise
-      ) {
-        gradeDisplay = '21★';
-      } else if (student.praise) {
-        gradeDisplay =
-          student.grade + '★';
-      }
-
-
-      const info = [
-        'Compito ' +
-          student.delivery.toLowerCase()
-      ];
-
-      if (student.praise) {
-        info.push('con lode');
-      }
-
-
-      row.innerHTML = `
-        <div>
-          <div class="preview-student-name">
-            ${escapeHtml(student.name)}
-          </div>
-
-          <div class="preview-student-info">
-            ${escapeHtml(info.join(' · '))}
-          </div>
-        </div>
-
-        <div class="grade-badge">
-          ${escapeHtml(String(gradeDisplay))}
-        </div>
-      `;
-
-
-      block.appendChild(row);
-
-    });
-
-
-    container.appendChild(block);
-
-  });
+  );
 
 }
 
@@ -2148,61 +2906,99 @@ function renderStudentPreview() {
 async function saveLesson() {
 
   if (!calculatedLesson) {
+
     showError(
       'Calcola prima i punti della lezione.'
     );
+
     switchTab('input');
+
     return;
+
   }
 
 
   const button =
-    document.getElementById('saveButton');
+    document.getElementById(
+      'saveButton'
+    );
 
-  button.disabled = true;
+
+  button.disabled =
+    true;
+
+
   button.textContent =
     'Registrazione...';
 
 
   const payload = {
-    action: 'saveLesson',
 
-    lessonId: currentLessonId,
+    action:
+      'saveLesson',
 
-    date: calculatedLesson.date,
+    lessonId:
+      currentLessonId,
 
-    teacher: calculatedLesson.teacher,
+    date:
+      calculatedLesson.date,
 
-    subject: calculatedLesson.subject,
+    teacher:
+      calculatedLesson.teacher,
 
-    lesson: calculatedLesson.lesson,
+    subject:
+      calculatedLesson.subject,
 
-    title: calculatedLesson.title,
+    lesson:
+      calculatedLesson.lesson,
 
-    students: calculatedLesson.students,
+    title:
+      calculatedLesson.title,
 
-    departments: calculatedLesson.departments
+    students:
+      calculatedLesson.students,
+
+    departments:
+      calculatedLesson.departments
+
   };
 
 
   try {
 
     const response =
-      await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type':
-            'text/plain;charset=utf-8'
-        },
-        body: JSON.stringify(payload),
-        redirect: 'follow'
-      });
+      await fetch(
+        API_URL,
+        {
+
+          method:
+            'POST',
+
+          headers: {
+
+            'Content-Type':
+              'text/plain;charset=utf-8'
+
+          },
+
+          body:
+            JSON.stringify(
+              payload
+            ),
+
+          redirect:
+            'follow'
+
+        }
+      );
 
 
     if (!response.ok) {
+
       throw new Error(
         'Il server ha restituito un errore.'
       );
+
     }
 
 
@@ -2211,14 +3007,18 @@ async function saveLesson() {
 
 
     if (!result.ok) {
+
       throw new Error(
         result.error ||
         'Registrazione non riuscita.'
       );
+
     }
 
 
-    if (result.duplicate) {
+    if (
+      result.duplicate
+    ) {
 
       showSuccess(
         'Questa lezione risultava già registrata. Nessun doppione creato.'
@@ -2240,16 +3040,21 @@ async function saveLesson() {
     button.textContent =
       'Lezione registrata ✓';
 
-    switchTab('input');
+
+    switchTab(
+      'input'
+    );
 
 
   } catch (error) {
 
     /*
-     * NON generiamo un nuovo ID:
-     * se il server avesse salvato ma la risposta
-     * fosse andata persa, riprovare con lo stesso
-     * ID impedisce la creazione di doppioni.
+     * Manteniamo lo stesso lessonId.
+     *
+     * Se Apps Script avesse salvato
+     * correttamente ma la risposta
+     * fosse andata persa, un nuovo
+     * tentativo non creerà doppioni.
      */
 
     showError(
@@ -2258,9 +3063,16 @@ async function saveLesson() {
       ' Puoi riprovare senza rischio di creare un doppione.'
     );
 
-    switchTab('input');
 
-    button.disabled = false;
+    switchTab(
+      'input'
+    );
+
+
+    button.disabled =
+      false;
+
+
     button.textContent =
       'Registra lezione';
 
@@ -2276,17 +3088,25 @@ async function saveLesson() {
 function setupTabs() {
 
   document
-    .querySelectorAll('.tab-button')
-    .forEach(function (button) {
+    .querySelectorAll(
+      '.tab-button'
+    )
+    .forEach(
+      function (button) {
 
-      button.addEventListener(
-        'click',
-        function () {
-          switchTab(button.dataset.tab);
-        }
-      );
+        button.addEventListener(
+          'click',
+          function () {
 
-    });
+            switchTab(
+              button.dataset.tab
+            );
+
+          }
+        );
+
+      }
+    );
 
 }
 
@@ -2294,32 +3114,52 @@ function setupTabs() {
 function switchTab(name) {
 
   document
-    .querySelectorAll('.tab-button')
-    .forEach(function (button) {
+    .querySelectorAll(
+      '.tab-button'
+    )
+    .forEach(
+      function (button) {
 
-      button.classList.toggle(
-        'active',
-        button.dataset.tab === name
-      );
+        button.classList.toggle(
 
-    });
+          'active',
+
+          button.dataset.tab ===
+          name
+
+        );
+
+      }
+    );
 
 
   document
-    .querySelectorAll('.tab-panel')
-    .forEach(function (panel) {
+    .querySelectorAll(
+      '.tab-panel'
+    )
+    .forEach(
+      function (panel) {
 
-      panel.classList.toggle(
-        'active',
-        panel.id === 'tab-' + name
-      );
+        panel.classList.toggle(
 
-    });
+          'active',
+
+          panel.id ===
+          'tab-' + name
+
+        );
+
+      }
+    );
 
 
   window.scrollTo({
+
     top: 0,
-    behavior: 'smooth'
+
+    behavior:
+      'smooth'
+
   });
 
 }
@@ -2327,64 +3167,76 @@ function switchTab(name) {
 
 function setupButtons() {
 
-  document
-    .getElementById('calculateButton')
-    .addEventListener(
-      'click',
-      calculateLesson
-    );
+  document.getElementById(
+    'calculateButton'
+  ).addEventListener(
+    'click',
+    calculateLesson
+  );
 
 
-  document
-    .getElementById(
-      'backToInputFromDepartments'
-    )
-    .addEventListener(
-      'click',
-      function () {
-        switchTab('input');
-      }
-    );
+  document.getElementById(
+    'backToInputFromDepartments'
+  ).addEventListener(
+    'click',
+    function () {
+
+      switchTab(
+        'input'
+      );
+
+    }
+  );
 
 
-  document
-    .getElementById('goStudents')
-    .addEventListener(
-      'click',
-      function () {
-        switchTab('students');
-      }
-    );
+  document.getElementById(
+    'goStudents'
+  ).addEventListener(
+    'click',
+    function () {
+
+      switchTab(
+        'students'
+      );
+
+    }
+  );
 
 
-  document
-    .getElementById(
-      'backToInputFromStudents'
-    )
-    .addEventListener(
-      'click',
-      function () {
-        switchTab('input');
-      }
-    );
+  document.getElementById(
+    'backToInputFromStudents'
+  ).addEventListener(
+    'click',
+    function () {
+
+      switchTab(
+        'input'
+      );
+
+    }
+  );
 
 
-  document
-    .getElementById('backDepartments')
-    .addEventListener(
-      'click',
-      function () {
-        switchTab('departments');
-      }
-    );
+  document.getElementById(
+    'backDepartments'
+  ).addEventListener(
+    'click',
+    function () {
+
+      switchTab(
+        'departments'
+      );
+
+    }
+  );
 
 
-  document
-    .getElementById('saveButton')
-    .addEventListener(
-      'click',
-      saveLesson
-    );
+  document.getElementById(
+    'saveButton'
+  ).addEventListener(
+    'click',
+    saveLesson
+  );
 
 }
 
@@ -2395,20 +3247,28 @@ function setupButtons() {
 
 function invalidateCalculation() {
 
-  calculatedLesson = null;
-  currentLessonId = null;
+  calculatedLesson =
+    null;
+
+
+  currentLessonId =
+    null;
+
 
   document.getElementById(
     'departmentPreviewEmpty'
   ).hidden = false;
 
+
   document.getElementById(
     'departmentPreview'
   ).hidden = true;
 
+
   document.getElementById(
     'studentPreviewEmpty'
   ).hidden = false;
+
 
   document.getElementById(
     'studentPreview'
@@ -2416,9 +3276,15 @@ function invalidateCalculation() {
 
 
   const button =
-    document.getElementById('saveButton');
+    document.getElementById(
+      'saveButton'
+    );
 
-  button.disabled = false;
+
+  button.disabled =
+    false;
+
+
   button.textContent =
     'Registra lezione';
 
@@ -2430,14 +3296,21 @@ function setToday() {
   const now =
     new Date();
 
+
   const local =
     new Date(
       now.getTime() -
-      now.getTimezoneOffset() * 60000
+      now.getTimezoneOffset() *
+      60000
     );
 
-  document.getElementById('date').value =
-    local.toISOString().slice(0, 10);
+
+  document.getElementById(
+    'date'
+  ).value =
+    local
+      .toISOString()
+      .slice(0, 10);
 
 }
 
@@ -2445,10 +3318,17 @@ function setToday() {
 function buildMeta(lesson) {
 
   return [
+
     lesson.teacher,
+
     lesson.lesson,
+
     lesson.subject,
-    formatDate(lesson.date)
+
+    formatDate(
+      lesson.date
+    )
+
   ].join(' · ');
 
 }
@@ -2457,11 +3337,18 @@ function buildMeta(lesson) {
 function formatDate(value) {
 
   const parts =
-    String(value).split('-');
+    String(value)
+      .split('-');
 
-  if (parts.length !== 3) {
+
+  if (
+    parts.length !== 3
+  ) {
+
     return value;
+
   }
+
 
   return (
     parts[2] +
@@ -2479,14 +3366,22 @@ function formatNumber(value) {
   const number =
     Number(value);
 
-  if (!Number.isFinite(number)) {
+
+  if (
+    !Number.isFinite(
+      number
+    )
+  ) {
+
     return '0';
+
   }
+
 
   return number.toLocaleString(
     'it-IT',
     {
-      maximumFractionDigits: 1
+      maximumFractionDigits: 2
     }
   );
 
@@ -2499,15 +3394,23 @@ function randomId() {
     window.crypto &&
     crypto.randomUUID
   ) {
-    return crypto.randomUUID();
+
+    return (
+      crypto.randomUUID()
+    );
+
   }
 
+
   return (
+
     Math.random()
       .toString(36)
       .slice(2) +
+
     Date.now()
       .toString(36)
+
   );
 
 }
@@ -2516,14 +3419,25 @@ function randomId() {
 function showError(message) {
 
   const box =
-    document.getElementById('formError');
+    document.getElementById(
+      'formError'
+    );
 
-  box.textContent = message;
-  box.classList.add('show');
+
+  box.textContent =
+    message;
+
+
+  box.classList.add(
+    'show'
+  );
+
 
   document.getElementById(
     'successBox'
-  ).classList.remove('show');
+  ).classList.remove(
+    'show'
+  );
 
 }
 
@@ -2532,7 +3446,9 @@ function clearError() {
 
   document.getElementById(
     'formError'
-  ).classList.remove('show');
+  ).classList.remove(
+    'show'
+  );
 
 }
 
@@ -2541,11 +3457,20 @@ function showSuccess(message) {
 
   clearError();
 
-  const box =
-    document.getElementById('successBox');
 
-  box.textContent = message;
-  box.classList.add('show');
+  const box =
+    document.getElementById(
+      'successBox'
+    );
+
+
+  box.textContent =
+    message;
+
+
+  box.classList.add(
+    'show'
+  );
 
 }
 
@@ -2553,13 +3478,34 @@ function showSuccess(message) {
 function escapeHtml(value) {
 
   return String(value)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
+
+    .replaceAll(
+      '&',
+      '&amp;'
+    )
+
+    .replaceAll(
+      '<',
+      '&lt;'
+    )
+
+    .replaceAll(
+      '>',
+      '&gt;'
+    )
+
+    .replaceAll(
+      '"',
+      '&quot;'
+    )
+
+    .replaceAll(
+      "'",
+      '&#039;'
+    );
 
 }
+
 </script>
 
 </body>
