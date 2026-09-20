@@ -1316,7 +1316,7 @@ function createStudentRow(name, department) {
       type="number"
       min="1"
       max="20"
-      step="1"
+      step="any"
       inputmode="numeric"
       placeholder="Voto"
       disabled
@@ -1508,15 +1508,15 @@ function collectFormData() {
 
 
       if (
-        !Number.isInteger(grade) ||
-        grade < 1 ||
-        grade > 20
-      ) {
-        throw new Error(
-          'Il voto di ' +
-          row.dataset.name +
-          ' deve essere un numero intero da 1 a 20.'
-        );
+  !Number.isFinite(grade) ||
+  grade < 1 ||
+  grade > 20
+) {
+  throw new Error(
+    'Il voto di ' +
+    row.dataset.name +
+    ' deve essere compreso tra 1 e 20.'
+  );
       }
 
 
