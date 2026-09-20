@@ -1,41 +1,3512 @@
-@media (max-width: 480px) {
-  .tab-button {
-    padding: 12px 3px;
-    font-size: 12px;
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Registro Voti Salem</title>
+
+  <style>
+    :root {
+      --bg: #17130f;
+      --paper: #f3ead4;
+      --paper-dark: #e8d8b6;
+      --ink: #34281f;
+      --muted: #756757;
+      --gold: #b88b3e;
+      --gold-light: #d5b66e;
+      --burgundy: #681f2a;
+      --burgundy-dark: #42131b;
+      --green: #496247;
+      --border: rgba(95, 66, 36, .28);
+      --shadow: 0 10px 35px rgba(0,0,0,.25);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top, rgba(184,139,62,.13), transparent 38%),
+        linear-gradient(135deg, #17130f, #211a14);
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      width: min(1120px, calc(100% - 24px));
+      margin: 24px auto 50px;
+    }
+
+    .header {
+      position: relative;
+      overflow: hidden;
+      padding: 26px 28px 22px;
+      color: #fff7e7;
+      border: 1px solid rgba(213,182,110,.5);
+      border-radius: 18px 18px 0 0;
+      background:
+        linear-gradient(135deg, rgba(104,31,42,.96), rgba(66,19,27,.98));
+      box-shadow: var(--shadow);
+    }
+
+    .header::after {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      right: -80px;
+      top: -100px;
+      border: 1px solid rgba(213,182,110,.25);
+      border-radius: 50%;
+    }
+
+    .header h1 {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      font-size: clamp(28px, 5vw, 46px);
+      letter-spacing: .02em;
+    }
+
+    .header p {
+      position: relative;
+      z-index: 1;
+      margin: 6px 0 0;
+      color: #e8d7bd;
+      font-size: 15px;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 42px;
+      padding: 10px 18px;
+      background: #eee2ca;
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: #a77732;
+      box-shadow: 0 0 0 4px rgba(167,119,50,.12);
+    }
+
+    .status.ok .status-dot {
+      background: #4e704b;
+      box-shadow: 0 0 0 4px rgba(78,112,75,.13);
+    }
+
+    .status.error .status-dot {
+      background: #9b3542;
+      box-shadow: 0 0 0 4px rgba(155,53,66,.13);
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--border);
+      border-top: 0;
+      background: #e7d8bb;
+    }
+
+    .tab-button {
+      padding: 15px 8px;
+      border: 0;
+      border-right: 1px solid var(--border);
+      background: transparent;
+      color: #5f5042;
+      font-weight: bold;
+      transition: .2s ease;
+    }
+
+    .tab-button:last-child {
+      border-right: 0;
+    }
+
+    .tab-button:hover {
+      background: rgba(255,255,255,.22);
+    }
+
+    .tab-button.active {
+      color: var(--burgundy);
+      background: var(--paper);
+      box-shadow: inset 0 -3px 0 var(--burgundy);
+    }
+
+    .paper {
+      min-height: 500px;
+      padding: 28px;
+      border: 1px solid var(--border);
+      border-top: 0;
+      border-radius: 0 0 18px 18px;
+      background:
+        linear-gradient(rgba(255,255,255,.16), rgba(255,255,255,.16)),
+        var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .section {
+      margin-bottom: 28px;
+    }
+
+    .section-title {
+      margin: 0 0 17px;
+      padding-bottom: 9px;
+      border-bottom: 1px solid rgba(104,31,42,.25);
+      color: var(--burgundy);
+      font-size: 22px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label.field-label {
+      display: block;
+      margin: 0 0 6px;
+      color: #554638;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .required::after {
+      content: " *";
+      color: var(--burgundy);
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select {
+      width: 100%;
+      min-height: 43px;
+      padding: 9px 11px;
+      border: 1px solid #c5b18c;
+      border-radius: 8px;
+      outline: none;
+      color: var(--ink);
+      background: rgba(255,255,255,.58);
+      transition: .15s ease;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(184,139,62,.14);
+    }
+
+    input:disabled,
+    select:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .hint {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .student-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .counter {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .department-input {
+      overflow: hidden;
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255,255,255,.25);
+    }
+
+    .department-input-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 11px 14px;
+      background: rgba(104,31,42,.07);
+      color: var(--burgundy);
+      font-weight: bold;
+    }
+
+    .student-row {
+      display: grid;
+      grid-template-columns: 76px minmax(160px, 1fr) 92px 110px 72px;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 13px;
+      border-top: 1px solid rgba(95,66,36,.13);
+    }
+
+    .student-row.active {
+      background: rgba(255,255,255,.35);
+    }
+
+    .student-name {
+      min-width: 0;
+      font-weight: bold;
+      overflow-wrap: anywhere;
+    }
+
+    .toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .toggle {
+      position: relative;
+      width: 38px;
+      height: 21px;
+      flex: 0 0 auto;
+    }
+
+    .toggle input {
+      display: none;
+    }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      background: #b9ab95;
+      transition: .2s;
+    }
+
+    .slider::before {
+      content: "";
+      position: absolute;
+      width: 17px;
+      height: 17px;
+      left: 2px;
+      top: 2px;
+      border-radius: 50%;
+      background: white;
+      transition: .2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,.25);
+    }
+
+    .toggle input:checked + .slider {
+      background: var(--burgundy);
+    }
+
+    .toggle input:checked + .slider::before {
+      transform: translateX(17px);
+    }
+
+    .partial-box,
+    .lode-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      font-size: 12px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .partial-box input,
+    .lode-box input {
+      accent-color: var(--burgundy);
+      width: 17px;
+      height: 17px;
+      flex: 0 0 auto;
+    }
+
+    .partial-box input:disabled,
+    .lode-box input:disabled {
+      cursor: not-allowed;
+    }
+
+    .empty {
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed #bca783;
+      border-radius: 10px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .btn {
+      min-height: 42px;
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      font-weight: bold;
+      transition: .15s ease;
+    }
+
+    .btn-primary {
+      color: white;
+      background: var(--burgundy);
+      border-color: var(--burgundy-dark);
+    }
+
+    .btn-primary:hover {
+      background: #7a2734;
+    }
+
+    .btn-secondary {
+      color: var(--burgundy);
+      background: transparent;
+      border-color: rgba(104,31,42,.45);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(104,31,42,.06);
+    }
+
+    .btn:disabled {
+      opacity: .55;
+      cursor: wait;
+    }
+
+    .error-box {
+      display: none;
+      margin: 0 0 18px;
+      padding: 12px 14px;
+      color: #762632;
+      background: #f5dadd;
+      border: 1px solid #d7a1a8;
+      border-radius: 9px;
+      font-size: 13px;
+    }
+
+    .error-box.show {
+      display: block;
+    }
+
+    .success-box {
+      display: none;
+      margin: 0 0 18px;
+      padding: 12px 14px;
+      color: #365235;
+      background: #dce9d9;
+      border: 1px solid #a7c3a2;
+      border-radius: 9px;
+    }
+
+    .success-box.show {
+      display: block;
+    }
+
+    /* ==========================
+       ANTEPRIME
+    ========================== */
+
+    .academy-title {
+      margin-bottom: 5px;
+      text-align: center;
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: .18em;
+    }
+
+    .preview-title {
+      margin: 0;
+      text-align: center;
+      color: var(--burgundy);
+      font-size: clamp(24px, 4vw, 34px);
+    }
+
+    .preview-meta {
+      margin: 7px 0 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .department-cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .department-card {
+      padding: 13px 8px;
+      text-align: center;
+      border: 1px solid rgba(104,31,42,.18);
+      border-radius: 10px;
+      background: rgba(255,255,255,.28);
+    }
+
+    .department-card .name {
+      color: var(--burgundy);
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .department-card .points {
+      margin-top: 4px;
+      font-size: 27px;
+      font-weight: bold;
+    }
+
+    .department-card .points-label {
+      color: var(--muted);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .score-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .score-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .score-table th,
+    .score-table td {
+      padding: 8px 7px;
+      text-align: center;
+      border-bottom: 1px solid rgba(95,66,36,.13);
+      border-right: 1px solid rgba(95,66,36,.1);
+    }
+
+    .score-table th:first-child,
+    .score-table td:first-child {
+      text-align: left;
+      font-weight: bold;
+    }
+
+    .score-table thead th {
+      color: var(--burgundy);
+      background: rgba(104,31,42,.06);
+    }
+
+    .score-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .score-table .total-row td {
+      color: var(--burgundy);
+      font-weight: bold;
+      background: rgba(184,139,62,.1);
+    }
+
+    .preview-note {
+      margin: 12px 0 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+      font-style: italic;
+    }
+
+    /* ==========================
+       STUDENTI PREVIEW
+    ========================== */
+
+    .preview-department {
+      margin: 0 0 15px;
+    }
+
+    .preview-department h3 {
+      margin: 0;
+      padding: 8px 11px;
+      color: var(--burgundy);
+      background: rgba(104,31,42,.07);
+      border-radius: 8px 8px 0 0;
+      font-size: 15px;
+    }
+
+    .preview-student {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      padding: 9px 11px;
+      border: 1px solid rgba(95,66,36,.14);
+      border-top: 0;
+      background: rgba(255,255,255,.22);
+    }
+
+    .preview-student:last-child {
+      border-radius: 0 0 8px 8px;
+    }
+
+    .preview-student-name {
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .preview-student-info {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .grade-badge {
+      min-width: 42px;
+      padding: 5px 7px;
+      text-align: center;
+      color: white;
+      background: var(--burgundy);
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    .loading {
+      padding: 60px 20px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .spinner {
+      width: 30px;
+      height: 30px;
+      margin: 0 auto 12px;
+      border: 3px solid #d8c8a8;
+      border-top-color: var(--burgundy);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ==========================
+       MOBILE
+    ========================== */
+
+    @media (max-width: 760px) {
+      .app {
+        width: min(100% - 12px, 1120px);
+        margin-top: 6px;
+      }
+
+      .header {
+        padding: 18px;
+        border-radius: 13px 13px 0 0;
+      }
+
+      .header h1 {
+        font-size: 29px;
+      }
+
+      .paper {
+        padding: 16px 11px 20px;
+        border-radius: 0 0 13px 13px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .field.full {
+        grid-column: auto;
+      }
+
+      .student-row {
+        grid-template-columns:
+          67px
+          minmax(0, 1fr)
+          68px
+          83px
+          60px;
+
+        gap: 5px;
+        padding: 8px 7px;
+      }
+
+      .student-name {
+        font-size: 12px;
+      }
+
+      .student-row input[type="number"] {
+        min-height: 36px;
+        padding: 6px;
+        font-size: 11px;
+      }
+
+      .toggle-wrap {
+        gap: 3px;
+        font-size: 9px;
+      }
+
+      .toggle {
+        width: 34px;
+        height: 19px;
+      }
+
+      .slider::before {
+        width: 15px;
+        height: 15px;
+      }
+
+      .toggle input:checked + .slider::before {
+        transform: translateX(15px);
+      }
+
+      .partial-box,
+      .lode-box {
+        gap: 3px;
+        font-size: 10px;
+      }
+
+      .partial-box input,
+      .lode-box input {
+        width: 15px;
+        height: 15px;
+      }
+
+      .department-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 7px;
+      }
+
+      .department-card {
+        padding: 9px 5px;
+      }
+
+      .department-card .points {
+        font-size: 22px;
+      }
+
+      .score-table {
+        font-size: 10px;
+      }
+
+      .score-table th,
+      .score-table td {
+        padding: 6px 4px;
+      }
+
+      .actions {
+        justify-content: stretch;
+      }
+
+      .actions .btn {
+        flex: 1;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .tab-button {
+        padding: 12px 3px;
+        font-size: 12px;
+      }
+
+      .status {
+        font-size: 11px;
+      }
+
+      .student-row {
+        grid-template-columns:
+          60px
+          minmax(75px, 1fr)
+          54px
+          68px
+          47px;
+
+        gap: 4px;
+      }
+
+      .student-name {
+        font-size: 10.5px;
+      }
+
+      .partial-box {
+        font-size: 8px;
+        gap: 2px;
+      }
+
+      .lode-box {
+        font-size: 8px;
+        gap: 2px;
+      }
+
+      .partial-box input,
+      .lode-box input {
+        width: 14px;
+        height: 14px;
+      }
+
+      .lode-box span {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <header class="header">
+    <h1>Registro voti Salem</h1>
+    <p>Inserimento lezione e punti dei reparti</p>
+  </header>
+
+  <div id="connectionStatus" class="status">
+    <span class="status-dot"></span>
+    <span id="connectionText">Collegamento al registro...</span>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab-button active" data-tab="input">Inserimento</button>
+    <button class="tab-button" data-tab="departments">Reparti</button>
+    <button class="tab-button" data-tab="students">Studenti</button>
+  </nav>
+
+  <main class="paper">
+
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      Caricamento configurazione Salem...
+    </div>
+
+    <div id="appContent" hidden>
+
+      <!-- ==========================
+           INSERIMENTO
+      =========================== -->
+
+      <section id="tab-input" class="tab-panel active">
+
+        <div id="formError" class="error-box"></div>
+        <div id="successBox" class="success-box"></div>
+
+        <div class="section">
+
+          <h2 class="section-title">
+            Dati della lezione
+          </h2>
+
+          <div class="form-grid">
+
+            <div class="field">
+              <label class="field-label required" for="teacher">
+                Docente
+              </label>
+
+              <select id="teacher">
+                <option value="">Seleziona il docente</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label class="field-label required" for="date">
+                Data
+              </label>
+
+              <input type="date" id="date">
+            </div>
+
+            <div class="field">
+              <label class="field-label required" for="subject">
+                Materia
+              </label>
+
+              <select id="subject">
+                <option value="">Seleziona la materia</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label class="field-label required" for="lesson">
+                Lezione
+              </label>
+
+              <select id="lesson">
+                <option value="">Seleziona la lezione</option>
+              </select>
+            </div>
+
+            <div class="field full">
+              <label class="field-label" for="title">
+                Titolo facoltativo
+              </label>
+
+              <input
+                type="text"
+                id="title"
+                maxlength="100"
+                placeholder="Es. Animagus"
+              >
+
+              <div class="hint">
+                Verrà mostrato insieme alla lezione nelle anteprime e nel registro.
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
+        <div class="section">
+
+          <div class="student-toolbar">
+
+            <h2
+              class="section-title"
+              style="margin:0; flex:1;"
+            >
+              Voti degli studenti
+            </h2>
+
+            <span
+              id="selectedCounter"
+              class="counter"
+            >
+              0 svolti
+            </span>
+
+          </div>
+
+          <div id="studentContainer"></div>
+
+        </div>
+
+
+        <div class="actions">
+          <button
+            id="calculateButton"
+            class="btn btn-primary"
+          >
+            Calcola punti
+          </button>
+        </div>
+
+      </section>
+
+
+      <!-- ==========================
+           REPARTI
+      =========================== -->
+
+      <section
+        id="tab-departments"
+        class="tab-panel"
+      >
+
+        <div
+          id="departmentPreviewEmpty"
+          class="empty"
+        >
+          Inserisci i voti e premi
+          <strong>Calcola punti</strong>
+          per visualizzare il riepilogo dei reparti.
+        </div>
+
+
+        <div
+          id="departmentPreview"
+          hidden
+        >
+
+          <div class="academy-title">
+            SALEM AUROR ACADEMY
+          </div>
+
+          <h2
+            id="departmentPreviewTitle"
+            class="preview-title"
+          >
+            Punti della lezione
+          </h2>
+
+          <div
+            id="departmentPreviewMeta"
+            class="preview-meta"
+          ></div>
+
+
+          <div
+            id="departmentCards"
+            class="department-cards"
+          ></div>
+
+
+          <div class="score-table-wrap">
+
+            <table class="score-table">
+
+              <thead>
+                <tr>
+                  <th>Calcolo</th>
+                  <th>D</th>
+                  <th>G</th>
+                  <th>L</th>
+                  <th>M</th>
+                </tr>
+              </thead>
+
+              <tbody id="scoreTableBody"></tbody>
+
+            </table>
+
+          </div>
+
+
+          <p class="preview-note">
+            In caso di parità, i reparti ottengono lo stesso bonus previsto per quella posizione.
+          </p>
+
+
+          <div class="actions">
+
+            <button
+              class="btn btn-secondary"
+              id="backToInputFromDepartments"
+            >
+              Modifica
+            </button>
+
+            <button
+              class="btn btn-secondary"
+              id="goStudents"
+            >
+              Guarda gli studenti
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ==========================
+           STUDENTI
+      =========================== -->
+
+      <section
+        id="tab-students"
+        class="tab-panel"
+      >
+
+        <div
+          id="studentPreviewEmpty"
+          class="empty"
+        >
+          Nessuna lezione pronta da visualizzare.
+        </div>
+
+
+        <div
+          id="studentPreview"
+          hidden
+        >
+
+          <div class="academy-title">
+            SALEM AUROR ACADEMY
+          </div>
+
+          <h2
+            id="studentPreviewTitle"
+            class="preview-title"
+          >
+            Voti
+          </h2>
+
+          <div
+            id="studentPreviewMeta"
+            class="preview-meta"
+          ></div>
+
+
+          <div id="studentPreviewDepartments"></div>
+
+
+          <p class="preview-note">
+            La media di reparto considera esclusivamente i compiti completi
+            con voto pari o superiore a 16. Un 20 con lode vale 21 ai fini della media.
+          </p>
+
+
+          <div class="actions">
+
+            <button
+              class="btn btn-secondary"
+              id="backToInputFromStudents"
+            >
+              Modifica
+            </button>
+
+            <button
+              class="btn btn-secondary"
+              id="backDepartments"
+            >
+              Guarda i reparti
+            </button>
+
+            <button
+              class="btn btn-primary"
+              id="saveButton"
+            >
+              Registra lezione
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   CONFIGURAZIONE
+========================================================= */
+
+const API_URL =
+  'https://script.google.com/macros/s/AKfycbwvQ6utDOQki9EZJ1JGtAaUD99efBHxmrKhar9Z2hqMcymAFIqxx4cDxO1xyKhfsX5B/exec';
+
+
+const DEPARTMENTS = [
+  'Duellanti',
+  'Guaritori',
+  'Legilimens',
+  'Mutaforma'
+];
+
+
+let configuration = null;
+let calculatedLesson = null;
+let currentLessonId = null;
+
+
+/* =========================================================
+   AVVIO
+========================================================= */
+
+document.addEventListener(
+  'DOMContentLoaded',
+  function () {
+
+    setupTabs();
+    setupButtons();
+    setToday();
+
+    loadConfiguration();
+
+  }
+);
+
+
+/* =========================================================
+   JSONP — CONFIGURAZIONE
+========================================================= */
+
+function loadConfiguration() {
+
+  const callbackName =
+    'salemConfig_' + Date.now();
+
+
+  const script =
+    document.createElement('script');
+
+
+  const timeout =
+    setTimeout(function () {
+
+      cleanup();
+
+      showConnectionError(
+        'Impossibile collegarsi al registro.'
+      );
+
+    }, 15000);
+
+
+  window[callbackName] =
+    function (data) {
+
+      clearTimeout(timeout);
+      cleanup();
+
+
+      if (!data || data.ok !== true) {
+
+        showConnectionError(
+          data && data.error
+            ? data.error
+            : 'Configurazione non disponibile.'
+        );
+
+        return;
+      }
+
+
+      configuration = data;
+
+      populateConfiguration();
+      renderStudents();
+
+
+      document.getElementById(
+        'loading'
+      ).hidden = true;
+
+
+      document.getElementById(
+        'appContent'
+      ).hidden = false;
+
+
+      const updated =
+        data.updatedAt
+          ? new Date(
+              data.updatedAt
+            ).toLocaleString('it-IT')
+          : '';
+
+
+      const status =
+        document.getElementById(
+          'connectionStatus'
+        );
+
+
+      status.classList.add('ok');
+
+
+      document.getElementById(
+        'connectionText'
+      ).textContent =
+        updated
+          ? 'Registro collegato · ultimo aggiornamento ' + updated
+          : 'Registro collegato';
+
+    };
+
+
+  script.src =
+    API_URL +
+    '?callback=' +
+    encodeURIComponent(callbackName) +
+    '&_=' +
+    Date.now();
+
+
+  script.onerror =
+    function () {
+
+      clearTimeout(timeout);
+      cleanup();
+
+      showConnectionError(
+        'Errore durante il collegamento al registro.'
+      );
+
+    };
+
+
+  document.body.appendChild(script);
+
+
+  function cleanup() {
+
+    if (script.parentNode) {
+      script.parentNode.removeChild(script);
+    }
+
+    try {
+      delete window[callbackName];
+    } catch (e) {
+      window[callbackName] = undefined;
+    }
+
   }
 
-  .status {
-    font-size: 11px;
-  }
-
-  .student-row {
-    grid-template-columns:
-      60px
-      minmax(75px, 1fr)
-      54px
-      68px
-      58px;
-
-    gap: 4px;
-  }
-
-  .student-name {
-    font-size: 10.5px;
-  }
-
-  .partial-box {
-    font-size: 8px;
-    gap: 2px;
-  }
-
-  .lode-box {
-    font-size: 8px;
-    gap: 2px;
-  }
-
-  .partial-box input,
-  .lode-box input {
-    width: 14px;
-    height: 14px;
-  }
 }
+
+
+function showConnectionError(message) {
+
+  document.getElementById(
+    'loading'
+  ).innerHTML =
+    '<strong>Errore di collegamento</strong><br><br>' +
+    escapeHtml(message);
+
+
+  const status =
+    document.getElementById(
+      'connectionStatus'
+    );
+
+
+  status.classList.add('error');
+
+
+  document.getElementById(
+    'connectionText'
+  ).textContent =
+    'Registro non collegato';
+
+}
+
+
+/* =========================================================
+   POPOLAMENTO CONFIGURAZIONE
+========================================================= */
+
+function populateConfiguration() {
+
+  const teacher =
+    document.getElementById('teacher');
+
+  const subject =
+    document.getElementById('subject');
+
+  const lesson =
+    document.getElementById('lesson');
+
+
+  configuration.teachers.forEach(
+    function (item) {
+
+      const option =
+        document.createElement('option');
+
+      option.value =
+        item.teacher;
+
+      option.textContent =
+        item.teacher;
+
+      teacher.appendChild(option);
+
+    }
+  );
+
+
+  getSubjects().forEach(
+    function (name) {
+
+      const option =
+        document.createElement('option');
+
+      option.value = name;
+      option.textContent = name;
+
+      subject.appendChild(option);
+
+    }
+  );
+
+
+  configuration.lessons.forEach(
+    function (name) {
+
+      const option =
+        document.createElement('option');
+
+      option.value = name;
+      option.textContent = name;
+
+      lesson.appendChild(option);
+
+    }
+  );
+
+
+  teacher.addEventListener(
+    'change',
+    function () {
+
+      const item =
+        configuration.teachers.find(
+          function (entry) {
+            return (
+              entry.teacher ===
+              teacher.value
+            );
+          }
+        );
+
+
+      if (item) {
+        subject.value =
+          item.subject;
+      } else {
+        subject.value = '';
+      }
+
+
+      invalidateCalculation();
+
+    }
+  );
+
+
+  subject.addEventListener(
+    'change',
+    invalidateCalculation
+  );
+
+
+  lesson.addEventListener(
+    'change',
+    invalidateCalculation
+  );
+
+
+  document.getElementById(
+    'date'
+  ).addEventListener(
+    'change',
+    invalidateCalculation
+  );
+
+
+  document.getElementById(
+    'title'
+  ).addEventListener(
+    'input',
+    invalidateCalculation
+  );
+
+}
+
+
+function getSubjects() {
+
+  return [
+    ...new Set(
+      configuration.teachers.map(
+        function (item) {
+          return item.subject;
+        }
+      )
+    )
+  ].sort(
+    function (a, b) {
+      return a.localeCompare(
+        b,
+        'it'
+      );
+    }
+  );
+
+}
+
+
+/* =========================================================
+   STUDENTI
+========================================================= */
+
+function renderStudents() {
+
+  const container =
+    document.getElementById(
+      'studentContainer'
+    );
+
+
+  container.innerHTML = '';
+
+
+  DEPARTMENTS.forEach(
+    function (department) {
+
+      const names =
+        configuration.students[
+          department
+        ] || [];
+
+
+      if (!names.length) {
+        return;
+      }
+
+
+      const block =
+        document.createElement('div');
+
+
+      block.className =
+        'department-input';
+
+
+      const header =
+        document.createElement('div');
+
+
+      header.className =
+        'department-input-header';
+
+
+      header.innerHTML =
+        '<span>' +
+        escapeHtml(department) +
+        '</span>' +
+        '<span>' +
+        names.length +
+        ' studenti</span>';
+
+
+      block.appendChild(header);
+
+
+      names.forEach(
+        function (name) {
+
+          block.appendChild(
+            createStudentRow(
+              name,
+              department
+            )
+          );
+
+        }
+      );
+
+
+      container.appendChild(block);
+
+    }
+  );
+
+
+  updateSelectedCounter();
+
+}
+
+
+function createStudentRow(
+  name,
+  department
+) {
+
+  const row =
+    document.createElement('div');
+
+
+  row.className =
+    'student-row';
+
+
+  row.dataset.name =
+    name;
+
+
+  row.dataset.department =
+    department;
+
+
+  row.innerHTML = `
+
+    <label class="toggle-wrap">
+
+      <span class="toggle">
+
+        <input
+          type="checkbox"
+          class="student-done"
+        >
+
+        <span class="slider"></span>
+
+      </span>
+
+      <span class="done-label">
+        Non svolto
+      </span>
+
+    </label>
+
+
+    <div class="student-name">
+      ${escapeHtml(name)}
+    </div>
+
+
+    <input
+      class="student-grade"
+      type="number"
+      min="1"
+      max="20"
+      step="any"
+      inputmode="decimal"
+      placeholder="Voto"
+      disabled
+    >
+
+
+    <label class="partial-box">
+
+      <input
+        type="checkbox"
+        class="student-partial"
+        disabled
+      >
+
+      <span>Parziale?</span>
+
+    </label>
+
+
+    <label class="lode-box">
+
+      <input
+        type="checkbox"
+        class="student-praise"
+        disabled
+      >
+
+      <span>Lode</span>
+
+    </label>
+
+  `;
+
+
+  const done =
+    row.querySelector(
+      '.student-done'
+    );
+
+
+  const grade =
+    row.querySelector(
+      '.student-grade'
+    );
+
+
+  const partial =
+    row.querySelector(
+      '.student-partial'
+    );
+
+
+  const praise =
+    row.querySelector(
+      '.student-praise'
+    );
+
+
+  const label =
+    row.querySelector(
+      '.done-label'
+    );
+
+
+  done.addEventListener(
+    'change',
+    function () {
+
+      const enabled =
+        done.checked;
+
+
+      grade.disabled =
+        !enabled;
+
+
+      partial.disabled =
+        !enabled;
+
+
+      praise.disabled =
+        !enabled;
+
+
+      row.classList.toggle(
+        'active',
+        enabled
+      );
+
+
+      label.textContent =
+        enabled
+          ? 'Svolto'
+          : 'Non svolto';
+
+
+      if (!enabled) {
+
+        grade.value = '';
+
+        partial.checked =
+          false;
+
+        praise.checked =
+          false;
+
+      }
+
+
+      updateSelectedCounter();
+      invalidateCalculation();
+
+    }
+  );
+
+
+  grade.addEventListener(
+    'input',
+    invalidateCalculation
+  );
+
+
+  partial.addEventListener(
+    'change',
+    invalidateCalculation
+  );
+
+
+  praise.addEventListener(
+    'change',
+    invalidateCalculation
+  );
+
+
+  return row;
+
+}
+
+
+function updateSelectedCounter() {
+
+  const total =
+    document.querySelectorAll(
+      '.student-done:checked'
+    ).length;
+
+
+  document.getElementById(
+    'selectedCounter'
+  ).textContent =
+    total === 1
+      ? '1 svolto'
+      : total + ' svolti';
+
+}
+
+
+/* =========================================================
+   VALIDAZIONE
+========================================================= */
+
+function collectFormData() {
+
+  clearError();
+
+
+  const date =
+    document.getElementById(
+      'date'
+    ).value;
+
+
+  const teacher =
+    document.getElementById(
+      'teacher'
+    ).value;
+
+
+  const subject =
+    document.getElementById(
+      'subject'
+    ).value;
+
+
+  const lesson =
+    document.getElementById(
+      'lesson'
+    ).value;
+
+
+  const title =
+    document.getElementById(
+      'title'
+    ).value.trim();
+
+
+  if (!teacher) {
+    throw new Error(
+      'Seleziona il docente.'
+    );
+  }
+
+
+  if (!date) {
+    throw new Error(
+      'Inserisci la data della lezione.'
+    );
+  }
+
+
+  if (!subject) {
+    throw new Error(
+      'Seleziona la materia.'
+    );
+  }
+
+
+  if (!lesson) {
+    throw new Error(
+      'Seleziona la lezione.'
+    );
+  }
+
+
+  const validPair =
+    configuration.teachers.some(
+      function (item) {
+
+        return (
+          item.teacher === teacher &&
+          item.subject === subject
+        );
+
+      }
+    );
+
+
+  if (!validPair) {
+
+    throw new Error(
+      'La materia selezionata non corrisponde al docente.'
+    );
+
+  }
+
+
+  const students = [];
+
+
+  document
+    .querySelectorAll(
+      '.student-row'
+    )
+    .forEach(
+      function (row) {
+
+        const done =
+          row.querySelector(
+            '.student-done'
+          );
+
+
+        if (!done.checked) {
+          return;
+        }
+
+
+        const gradeValue =
+          row.querySelector(
+            '.student-grade'
+          ).value;
+
+
+        const partial =
+          row.querySelector(
+            '.student-partial'
+          ).checked;
+
+
+        /*
+         * La checkbox funziona al contrario:
+         *
+         * SPENTA  = Completo
+         * ATTIVA  = Parziale
+         */
+
+        const delivery =
+          partial
+            ? 'Parziale'
+            : 'Completo';
+
+
+        const praise =
+          row.querySelector(
+            '.student-praise'
+          ).checked;
+
+
+        if (
+          gradeValue === ''
+        ) {
+
+          throw new Error(
+            'Inserisci il voto di ' +
+            row.dataset.name +
+            '.'
+          );
+
+        }
+
+
+        const grade =
+          Number(gradeValue);
+
+
+        /*
+         * I DECIMALI SONO AMMESSI.
+         *
+         * Esempi validi:
+         * 16
+         * 16.5
+         * 17.25
+         * 19.5
+         * 20
+         */
+
+        if (
+          !Number.isFinite(grade) ||
+          grade < 1 ||
+          grade > 20
+        ) {
+
+          throw new Error(
+            'Il voto di ' +
+            row.dataset.name +
+            ' deve essere compreso tra 1 e 20.'
+          );
+
+        }
+
+
+        students.push({
+
+          name:
+            row.dataset.name,
+
+          department:
+            row.dataset.department,
+
+          grade:
+            grade,
+
+          delivery:
+            delivery,
+
+          praise:
+            praise,
+
+          notes:
+            ''
+
+        });
+
+      }
+    );
+
+
+  if (!students.length) {
+
+    throw new Error(
+      'Seleziona almeno uno studente che ha svolto il compito.'
+    );
+
+  }
+
+
+  return {
+
+    date:
+      date,
+
+    teacher:
+      teacher,
+
+    subject:
+      subject,
+
+    lesson:
+      lesson,
+
+    title:
+      title,
+
+    students:
+      students
+
+  };
+
+}
+
+
+/* =========================================================
+   CALCOLI
+========================================================= */
+
+function calculateLesson() {
+
+  try {
+
+    const data =
+      collectFormData();
+
+
+    const departments =
+      calculateDepartments(
+        data.students
+      );
+
+
+    calculatedLesson = {
+
+      ...data,
+
+      departments:
+        departments
+
+    };
+
+
+    currentLessonId =
+      'SALEM-' +
+      Date.now() +
+      '-' +
+      randomId();
+
+
+    renderDepartmentPreview();
+    renderStudentPreview();
+
+
+    switchTab(
+      'departments'
+    );
+
+
+  } catch (error) {
+
+    showError(
+      error.message
+    );
+
+
+    switchTab(
+      'input'
+    );
+
+  }
+
+}
+
+
+function calculateDepartments(
+  students
+) {
+
+  const results =
+    DEPARTMENTS.map(
+      function (department) {
+
+        const all =
+          students.filter(
+            function (student) {
+
+              return (
+                student.department ===
+                department
+              );
+
+            }
+          );
+
+
+        const complete =
+          all.filter(
+            function (student) {
+
+              return (
+                student.delivery ===
+                'Completo'
+              );
+
+            }
+          );
+
+
+        const partial =
+          all.filter(
+            function (student) {
+
+              return (
+                student.delivery ===
+                'Parziale'
+              );
+
+            }
+          );
+
+
+        /*
+         * MEDIA DI REPARTO
+         *
+         * - considera SOLO i completi
+         * - considera SOLO voti >= 16
+         * - 20 + lode vale 21
+         * - gli altri voti con lode mantengono
+         *   il proprio valore
+         * - arrotondamento SEMPRE PER ECCESSO
+         *   al primo decimale
+         */
+
+        const validForAverage =
+          complete
+
+            .map(
+              function (student) {
+
+                return {
+
+                  ...student,
+
+                  effectiveGrade:
+                    student.grade === 20 &&
+                    student.praise
+                      ? 21
+                      : student.grade
+
+                };
+
+              }
+            )
+
+            .filter(
+              function (student) {
+
+                return (
+                  student.effectiveGrade >=
+                  16
+                );
+
+              }
+            );
+
+
+        let average = 0;
+
+
+        if (
+          validForAverage.length
+        ) {
+
+          const sum =
+            validForAverage.reduce(
+
+              function (
+                total,
+                student
+              ) {
+
+                return (
+                  total +
+                  student.effectiveGrade
+                );
+
+              },
+
+              0
+
+            );
+
+
+          average =
+            Math.ceil(
+              (
+                sum /
+                validForAverage.length
+              ) * 10
+            ) / 10;
+
+        }
+
+
+        const praises =
+          all.filter(
+            function (student) {
+
+              return student.praise;
+
+            }
+          ).length;
+
+
+        const has21 =
+          all.some(
+            function (student) {
+
+              return (
+                student.grade === 20 &&
+                student.praise
+              );
+
+            }
+          );
+
+
+        return {
+
+          department:
+            department,
+
+          average:
+            average,
+
+          assignments:
+            all.length,
+
+          complete:
+            complete.length,
+
+          partial:
+            partial.length,
+
+          has21:
+            has21 ? 1 : 0,
+
+          praises:
+            praises,
+
+          averagePoints:
+            roundPoint(
+              average * 3
+            ),
+
+          assignmentPoints:
+            all.length * 2,
+
+          completePoints:
+            complete.length * 3,
+
+          bonus21:
+            has21 ? 10 : 0,
+
+          bonusAverage:
+            0,
+
+          bonusPraise:
+            0,
+
+          bonusQuantity:
+            0,
+
+          bonusComplete:
+            0,
+
+          total:
+            0
+
+        };
+
+      }
+    );
+
+
+  /*
+   * CLASSIFICA MEDIA
+   *
+   * 1° valore distinto = 15
+   * 2° valore distinto = 5
+   */
+
+  applyRankingBonus(
+
+    results,
+
+    'average',
+
+    'bonusAverage',
+
+    [15, 5],
+
+    false
+
+  );
+
+
+  /*
+   * PIÙ LODI
+   *
+   * reparto/i con più lodi = 5
+   * se nessuno ha lodi, nessun bonus
+   */
+
+  const maxPraises =
+    Math.max(
+      ...results.map(
+        function (result) {
+          return result.praises;
+        }
+      )
+    );
+
+
+  if (
+    maxPraises > 0
+  ) {
+
+    results.forEach(
+      function (result) {
+
+        if (
+          result.praises ===
+          maxPraises
+        ) {
+
+          result.bonusPraise =
+            5;
+
+        }
+
+      }
+    );
+
+  }
+
+
+  /*
+   * QUANTITÀ COMPITI
+   *
+   * 1° valore distinto = 10
+   * 2° valore distinto = 5
+   */
+
+  applyRankingBonus(
+
+    results,
+
+    'assignments',
+
+    'bonusQuantity',
+
+    [10, 5],
+
+    false
+
+  );
+
+
+  /*
+   * CLASSIFICA COMPLETI
+   *
+   * 1° = 20
+   * 2° = 15
+   * 3° = 10
+   * 4° = 5
+   */
+
+  applyRankingBonus(
+
+    results,
+
+    'complete',
+
+    'bonusComplete',
+
+    [20, 15, 10, 5],
+
+    true
+
+  );
+
+
+  results.forEach(
+    function (result) {
+
+      result.total =
+        roundPoint(
+
+          result.averagePoints +
+
+          result.assignmentPoints +
+
+          result.completePoints +
+
+          result.bonus21 +
+
+          result.bonusAverage +
+
+          result.bonusPraise +
+
+          result.bonusQuantity +
+
+          result.bonusComplete
+
+        );
+
+    }
+  );
+
+
+  return results;
+
+}
+
+
+function applyRankingBonus(
+  results,
+  valueKey,
+  bonusKey,
+  bonuses,
+  includeZero
+) {
+
+  let values =
+    results.map(
+      function (result) {
+
+        return (
+          Number(
+            result[valueKey]
+          ) || 0
+        );
+
+      }
+    );
+
+
+  if (!includeZero) {
+
+    values =
+      values.filter(
+        function (value) {
+
+          return value > 0;
+
+        }
+      );
+
+  }
+
+
+  const distinct =
+    [...new Set(values)]
+      .sort(
+        function (a, b) {
+          return b - a;
+        }
+      );
+
+
+  results.forEach(
+    function (result) {
+
+      const value =
+        Number(
+          result[valueKey]
+        ) || 0;
+
+
+      if (
+        !includeZero &&
+        value <= 0
+      ) {
+
+        result[bonusKey] =
+          0;
+
+        return;
+
+      }
+
+
+      const position =
+        distinct.indexOf(
+          value
+        );
+
+
+      result[bonusKey] =
+        position >= 0 &&
+        position < bonuses.length
+          ? bonuses[position]
+          : 0;
+
+    }
+  );
+
+}
+
+
+function roundPoint(value) {
+
+  return (
+    Math.round(
+      (
+        Number(value) +
+        Number.EPSILON
+      ) * 10
+    ) / 10
+  );
+
+}
+
+
+/* =========================================================
+   PREVIEW REPARTI
+========================================================= */
+
+function renderDepartmentPreview() {
+
+  const lesson =
+    calculatedLesson;
+
+
+  document.getElementById(
+    'departmentPreviewEmpty'
+  ).hidden = true;
+
+
+  document.getElementById(
+    'departmentPreview'
+  ).hidden = false;
+
+
+  document.getElementById(
+    'departmentPreviewTitle'
+  ).textContent =
+    lesson.title
+      ? lesson.title
+      : 'Punti della lezione';
+
+
+  document.getElementById(
+    'departmentPreviewMeta'
+  ).textContent =
+    buildMeta(lesson);
+
+
+  const cards =
+    document.getElementById(
+      'departmentCards'
+    );
+
+
+  cards.innerHTML = '';
+
+
+  lesson.departments.forEach(
+    function (dep) {
+
+      const card =
+        document.createElement(
+          'div'
+        );
+
+
+      card.className =
+        'department-card';
+
+
+      card.innerHTML = `
+
+        <div class="name">
+          ${escapeHtml(dep.department)}
+        </div>
+
+        <div class="points">
+          ${formatNumber(dep.total)}
+        </div>
+
+        <div class="points-label">
+          punti
+        </div>
+
+      `;
+
+
+      cards.appendChild(card);
+
+    }
+  );
+
+
+  const rows = [
+
+    [
+      'Media × 3',
+      'averagePoints'
+    ],
+
+    [
+      'Ogni compito × 2',
+      'assignmentPoints'
+    ],
+
+    [
+      'Ogni completo × 3',
+      'completePoints'
+    ],
+
+    [
+      'Almeno un 21',
+      'bonus21'
+    ],
+
+    [
+      'Classifica media',
+      'bonusAverage'
+    ],
+
+    [
+      'Più lodi',
+      'bonusPraise'
+    ],
+
+    [
+      'Quantità compiti',
+      'bonusQuantity'
+    ],
+
+    [
+      'Classifica completi',
+      'bonusComplete'
+    ],
+
+    [
+      'Totale',
+      'total'
+    ]
+
+  ];
+
+
+  const tbody =
+    document.getElementById(
+      'scoreTableBody'
+    );
+
+
+  tbody.innerHTML = '';
+
+
+  rows.forEach(
+    function (rowInfo) {
+
+      const tr =
+        document.createElement(
+          'tr'
+        );
+
+
+      if (
+        rowInfo[1] ===
+        'total'
+      ) {
+
+        tr.className =
+          'total-row';
+
+      }
+
+
+      const cells =
+        lesson.departments.map(
+          function (dep) {
+
+            return formatNumber(
+              dep[
+                rowInfo[1]
+              ]
+            );
+
+          }
+        );
+
+
+      tr.innerHTML =
+        '<td>' +
+        escapeHtml(
+          rowInfo[0]
+        ) +
+        '</td>' +
+
+        cells
+          .map(
+            function (value) {
+
+              return (
+                '<td>' +
+                value +
+                '</td>'
+              );
+
+            }
+          )
+          .join('');
+
+
+      tbody.appendChild(tr);
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   PREVIEW STUDENTI
+========================================================= */
+
+function renderStudentPreview() {
+
+  const lesson =
+    calculatedLesson;
+
+
+  document.getElementById(
+    'studentPreviewEmpty'
+  ).hidden = true;
+
+
+  document.getElementById(
+    'studentPreview'
+  ).hidden = false;
+
+
+  document.getElementById(
+    'studentPreviewTitle'
+  ).textContent =
+    lesson.title
+      ? 'Voti – ' + lesson.title
+      : 'Voti – ' + lesson.lesson;
+
+
+  document.getElementById(
+    'studentPreviewMeta'
+  ).textContent =
+    buildMeta(lesson);
+
+
+  const container =
+    document.getElementById(
+      'studentPreviewDepartments'
+    );
+
+
+  container.innerHTML = '';
+
+
+  DEPARTMENTS.forEach(
+    function (department) {
+
+      const students =
+        lesson.students.filter(
+          function (student) {
+
+            return (
+              student.department ===
+              department
+            );
+
+          }
+        );
+
+
+      if (!students.length) {
+        return;
+      }
+
+
+      const block =
+        document.createElement(
+          'div'
+        );
+
+
+      block.className =
+        'preview-department';
+
+
+      const title =
+        document.createElement(
+          'h3'
+        );
+
+
+      title.textContent =
+        department;
+
+
+      block.appendChild(
+        title
+      );
+
+
+      students.forEach(
+        function (student) {
+
+          const row =
+            document.createElement(
+              'div'
+            );
+
+
+          row.className =
+            'preview-student';
+
+
+          let gradeDisplay =
+            formatNumber(
+              student.grade
+            );
+
+
+          if (
+            student.grade === 20 &&
+            student.praise
+          ) {
+
+            gradeDisplay =
+              '21★';
+
+          } else if (
+            student.praise
+          ) {
+
+            gradeDisplay =
+              formatNumber(
+                student.grade
+              ) + '★';
+
+          }
+
+
+          const info = [
+
+            'Compito ' +
+            student.delivery
+              .toLowerCase()
+
+          ];
+
+
+          if (
+            student.praise
+          ) {
+
+            info.push(
+              'con lode'
+            );
+
+          }
+
+
+          row.innerHTML = `
+
+            <div>
+
+              <div class="preview-student-name">
+                ${escapeHtml(student.name)}
+              </div>
+
+              <div class="preview-student-info">
+                ${escapeHtml(info.join(' · '))}
+              </div>
+
+            </div>
+
+            <div class="grade-badge">
+              ${escapeHtml(String(gradeDisplay))}
+            </div>
+
+          `;
+
+
+          block.appendChild(
+            row
+          );
+
+        }
+      );
+
+
+      container.appendChild(
+        block
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   SALVATAGGIO
+========================================================= */
+
+async function saveLesson() {
+
+  if (!calculatedLesson) {
+
+    showError(
+      'Calcola prima i punti della lezione.'
+    );
+
+    switchTab('input');
+
+    return;
+
+  }
+
+
+  const button =
+    document.getElementById(
+      'saveButton'
+    );
+
+
+  button.disabled =
+    true;
+
+
+  button.textContent =
+    'Registrazione...';
+
+
+  const payload = {
+
+    action:
+      'saveLesson',
+
+    lessonId:
+      currentLessonId,
+
+    date:
+      calculatedLesson.date,
+
+    teacher:
+      calculatedLesson.teacher,
+
+    subject:
+      calculatedLesson.subject,
+
+    lesson:
+      calculatedLesson.lesson,
+
+    title:
+      calculatedLesson.title,
+
+    students:
+      calculatedLesson.students,
+
+    departments:
+      calculatedLesson.departments
+
+  };
+
+
+  try {
+
+    const response =
+      await fetch(
+        API_URL,
+        {
+
+          method:
+            'POST',
+
+          headers: {
+
+            'Content-Type':
+              'text/plain;charset=utf-8'
+
+          },
+
+          body:
+            JSON.stringify(
+              payload
+            ),
+
+          redirect:
+            'follow'
+
+        }
+      );
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        'Il server ha restituito un errore.'
+      );
+
+    }
+
+
+    const result =
+      await response.json();
+
+
+    if (!result.ok) {
+
+      throw new Error(
+        result.error ||
+        'Registrazione non riuscita.'
+      );
+
+    }
+
+
+    if (
+      result.duplicate
+    ) {
+
+      showSuccess(
+        'Questa lezione risultava già registrata. Nessun doppione creato.'
+      );
+
+    } else {
+
+      showSuccess(
+        'Lezione registrata correttamente! ' +
+        result.savedStudents +
+        ' studenti e ' +
+        result.savedDepartments +
+        ' reparti salvati.'
+      );
+
+    }
+
+
+    button.textContent =
+      'Lezione registrata ✓';
+
+
+    switchTab(
+      'input'
+    );
+
+
+  } catch (error) {
+
+    /*
+     * Manteniamo lo stesso lessonId.
+     *
+     * Se Apps Script avesse salvato
+     * correttamente ma la risposta
+     * fosse andata persa, un nuovo
+     * tentativo non creerà doppioni.
+     */
+
+    showError(
+      'Non sono riuscita a confermare la registrazione: ' +
+      error.message +
+      ' Puoi riprovare senza rischio di creare un doppione.'
+    );
+
+
+    switchTab(
+      'input'
+    );
+
+
+    button.disabled =
+      false;
+
+
+    button.textContent =
+      'Registra lezione';
+
+  }
+
+}
+
+
+/* =========================================================
+   TABS E PULSANTI
+========================================================= */
+
+function setupTabs() {
+
+  document
+    .querySelectorAll(
+      '.tab-button'
+    )
+    .forEach(
+      function (button) {
+
+        button.addEventListener(
+          'click',
+          function () {
+
+            switchTab(
+              button.dataset.tab
+            );
+
+          }
+        );
+
+      }
+    );
+
+}
+
+
+function switchTab(name) {
+
+  document
+    .querySelectorAll(
+      '.tab-button'
+    )
+    .forEach(
+      function (button) {
+
+        button.classList.toggle(
+
+          'active',
+
+          button.dataset.tab ===
+          name
+
+        );
+
+      }
+    );
+
+
+  document
+    .querySelectorAll(
+      '.tab-panel'
+    )
+    .forEach(
+      function (panel) {
+
+        panel.classList.toggle(
+
+          'active',
+
+          panel.id ===
+          'tab-' + name
+
+        );
+
+      }
+    );
+
+
+  window.scrollTo({
+
+    top: 0,
+
+    behavior:
+      'smooth'
+
+  });
+
+}
+
+
+function setupButtons() {
+
+  document.getElementById(
+    'calculateButton'
+  ).addEventListener(
+    'click',
+    calculateLesson
+  );
+
+
+  document.getElementById(
+    'backToInputFromDepartments'
+  ).addEventListener(
+    'click',
+    function () {
+
+      switchTab(
+        'input'
+      );
+
+    }
+  );
+
+
+  document.getElementById(
+    'goStudents'
+  ).addEventListener(
+    'click',
+    function () {
+
+      switchTab(
+        'students'
+      );
+
+    }
+  );
+
+
+  document.getElementById(
+    'backToInputFromStudents'
+  ).addEventListener(
+    'click',
+    function () {
+
+      switchTab(
+        'input'
+      );
+
+    }
+  );
+
+
+  document.getElementById(
+    'backDepartments'
+  ).addEventListener(
+    'click',
+    function () {
+
+      switchTab(
+        'departments'
+      );
+
+    }
+  );
+
+
+  document.getElementById(
+    'saveButton'
+  ).addEventListener(
+    'click',
+    saveLesson
+  );
+
+}
+
+
+/* =========================================================
+   UTILITÀ
+========================================================= */
+
+function invalidateCalculation() {
+
+  calculatedLesson =
+    null;
+
+
+  currentLessonId =
+    null;
+
+
+  document.getElementById(
+    'departmentPreviewEmpty'
+  ).hidden = false;
+
+
+  document.getElementById(
+    'departmentPreview'
+  ).hidden = true;
+
+
+  document.getElementById(
+    'studentPreviewEmpty'
+  ).hidden = false;
+
+
+  document.getElementById(
+    'studentPreview'
+  ).hidden = true;
+
+
+  const button =
+    document.getElementById(
+      'saveButton'
+    );
+
+
+  button.disabled =
+    false;
+
+
+  button.textContent =
+    'Registra lezione';
+
+}
+
+
+function setToday() {
+
+  const now =
+    new Date();
+
+
+  const local =
+    new Date(
+      now.getTime() -
+      now.getTimezoneOffset() *
+      60000
+    );
+
+
+  document.getElementById(
+    'date'
+  ).value =
+    local
+      .toISOString()
+      .slice(0, 10);
+
+}
+
+
+function buildMeta(lesson) {
+
+  return [
+
+    lesson.teacher,
+
+    lesson.lesson,
+
+    lesson.subject,
+
+    formatDate(
+      lesson.date
+    )
+
+  ].join(' · ');
+
+}
+
+
+function formatDate(value) {
+
+  const parts =
+    String(value)
+      .split('-');
+
+
+  if (
+    parts.length !== 3
+  ) {
+
+    return value;
+
+  }
+
+
+  return (
+    parts[2] +
+    '/' +
+    parts[1] +
+    '/' +
+    parts[0]
+  );
+
+}
+
+
+function formatNumber(value) {
+
+  const number =
+    Number(value);
+
+
+  if (
+    !Number.isFinite(
+      number
+    )
+  ) {
+
+    return '0';
+
+  }
+
+
+  return number.toLocaleString(
+    'it-IT',
+    {
+      maximumFractionDigits: 2
+    }
+  );
+
+}
+
+
+function randomId() {
+
+  if (
+    window.crypto &&
+    crypto.randomUUID
+  ) {
+
+    return (
+      crypto.randomUUID()
+    );
+
+  }
+
+
+  return (
+
+    Math.random()
+      .toString(36)
+      .slice(2) +
+
+    Date.now()
+      .toString(36)
+
+  );
+
+}
+
+
+function showError(message) {
+
+  const box =
+    document.getElementById(
+      'formError'
+    );
+
+
+  box.textContent =
+    message;
+
+
+  box.classList.add(
+    'show'
+  );
+
+
+  document.getElementById(
+    'successBox'
+  ).classList.remove(
+    'show'
+  );
+
+}
+
+
+function clearError() {
+
+  document.getElementById(
+    'formError'
+  ).classList.remove(
+    'show'
+  );
+
+}
+
+
+function showSuccess(message) {
+
+  clearError();
+
+
+  const box =
+    document.getElementById(
+      'successBox'
+    );
+
+
+  box.textContent =
+    message;
+
+
+  box.classList.add(
+    'show'
+  );
+
+}
+
+
+function escapeHtml(value) {
+
+  return String(value)
+
+    .replaceAll(
+      '&',
+      '&amp;'
+    )
+
+    .replaceAll(
+      '<',
+      '&lt;'
+    )
+
+    .replaceAll(
+      '>',
+      '&gt;'
+    )
+
+    .replaceAll(
+      '"',
+      '&quot;'
+    )
+
+    .replaceAll(
+      "'",
+      '&#039;'
+    );
+
+}
+
+</script>
+
+</body>
+</html>
