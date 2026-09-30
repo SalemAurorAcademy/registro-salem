@@ -448,10 +448,6 @@
       display: block;
     }
 
-    /* ==========================
-       ANTEPRIME
-    ========================== */
-
     .academy-title {
       margin-bottom: 5px;
       text-align: center;
@@ -558,10 +554,6 @@
       font-style: italic;
     }
 
-    /* ==========================
-       STUDENTI PREVIEW
-    ========================== */
-
     .preview-department {
       margin: 0 0 15px;
     }
@@ -633,10 +625,6 @@
         transform: rotate(360deg);
       }
     }
-
-    /* ==========================
-       MOBILE
-    ========================== */
 
     @media (max-width: 760px) {
       .app {
@@ -824,10 +812,6 @@
 
     <div id="appContent" hidden>
 
-      <!-- ==========================
-           INSERIMENTO
-      =========================== -->
-
       <section id="tab-input" class="tab-panel active">
 
         <div id="formError" class="error-box"></div>
@@ -899,7 +883,6 @@
           </div>
         </div>
 
-
         <div class="section">
 
           <div class="student-toolbar">
@@ -924,7 +907,6 @@
 
         </div>
 
-
         <div class="actions">
           <button
             id="calculateButton"
@@ -935,11 +917,6 @@
         </div>
 
       </section>
-
-
-      <!-- ==========================
-           REPARTI
-      =========================== -->
 
       <section
         id="tab-departments"
@@ -954,7 +931,6 @@
           <strong>Calcola punti</strong>
           per visualizzare il riepilogo dei reparti.
         </div>
-
 
         <div
           id="departmentPreview"
@@ -977,12 +953,10 @@
             class="preview-meta"
           ></div>
 
-
           <div
             id="departmentCards"
             class="department-cards"
           ></div>
-
 
           <div class="score-table-wrap">
 
@@ -1004,11 +978,9 @@
 
           </div>
 
-
           <p class="preview-note">
             In caso di parità, i reparti ottengono lo stesso bonus previsto per quella posizione.
           </p>
-
 
           <div class="actions">
 
@@ -1032,11 +1004,6 @@
 
       </section>
 
-
-      <!-- ==========================
-           STUDENTI
-      =========================== -->
-
       <section
         id="tab-students"
         class="tab-panel"
@@ -1048,7 +1015,6 @@
         >
           Nessuna lezione pronta da visualizzare.
         </div>
-
 
         <div
           id="studentPreview"
@@ -1071,15 +1037,14 @@
             class="preview-meta"
           ></div>
 
-
           <div id="studentPreviewDepartments"></div>
-
 
           <p class="preview-note">
             La media di reparto considera esclusivamente i compiti completi
-            con voto pari o superiore a 16. Un 20 con lode vale 21 ai fini della media.
+            con voto effettivo pari o superiore a 16. La lode aggiunge 1 punto
+            al voto ai fini della media: ad esempio 15 con lode vale 16 e
+            20 con lode vale 21.
           </p>
-
 
           <div class="actions">
 
@@ -1116,16 +1081,10 @@
 
 </div>
 
-
 <script>
-
-/* =========================================================
-   CONFIGURAZIONE
-========================================================= */
 
 const API_URL =
   'https://script.google.com/macros/s/AKfycbwvQ6utDOQki9EZJ1JGtAaUD99efBHxmrKhar9Z2hqMcymAFIqxx4cDxO1xyKhfsX5B/exec';
-
 
 const DEPARTMENTS = [
   'Duellanti',
@@ -1134,15 +1093,9 @@ const DEPARTMENTS = [
   'Mutaforma'
 ];
 
-
 let configuration = null;
 let calculatedLesson = null;
 let currentLessonId = null;
-
-
-/* =========================================================
-   AVVIO
-========================================================= */
 
 document.addEventListener(
   'DOMContentLoaded',
@@ -1157,20 +1110,13 @@ document.addEventListener(
   }
 );
 
-
-/* =========================================================
-   JSONP — CONFIGURAZIONE
-========================================================= */
-
 function loadConfiguration() {
 
   const callbackName =
     'salemConfig_' + Date.now();
 
-
   const script =
     document.createElement('script');
-
 
   const timeout =
     setTimeout(function () {
@@ -1183,13 +1129,11 @@ function loadConfiguration() {
 
     }, 15000);
 
-
   window[callbackName] =
     function (data) {
 
       clearTimeout(timeout);
       cleanup();
-
 
       if (!data || data.ok !== true) {
 
@@ -1202,22 +1146,18 @@ function loadConfiguration() {
         return;
       }
 
-
       configuration = data;
 
       populateConfiguration();
       renderStudents();
 
-
       document.getElementById(
         'loading'
       ).hidden = true;
 
-
       document.getElementById(
         'appContent'
       ).hidden = false;
-
 
       const updated =
         data.updatedAt
@@ -1226,15 +1166,12 @@ function loadConfiguration() {
             ).toLocaleString('it-IT')
           : '';
 
-
       const status =
         document.getElementById(
           'connectionStatus'
         );
 
-
       status.classList.add('ok');
-
 
       document.getElementById(
         'connectionText'
@@ -1245,14 +1182,12 @@ function loadConfiguration() {
 
     };
 
-
   script.src =
     API_URL +
     '?callback=' +
     encodeURIComponent(callbackName) +
     '&_=' +
     Date.now();
-
 
   script.onerror =
     function () {
@@ -1266,9 +1201,7 @@ function loadConfiguration() {
 
     };
 
-
   document.body.appendChild(script);
-
 
   function cleanup() {
 
@@ -1286,7 +1219,6 @@ function loadConfiguration() {
 
 }
 
-
 function showConnectionError(message) {
 
   document.getElementById(
@@ -1295,15 +1227,12 @@ function showConnectionError(message) {
     '<strong>Errore di collegamento</strong><br><br>' +
     escapeHtml(message);
 
-
   const status =
     document.getElementById(
       'connectionStatus'
     );
 
-
   status.classList.add('error');
-
 
   document.getElementById(
     'connectionText'
@@ -1311,11 +1240,6 @@ function showConnectionError(message) {
     'Registro non collegato';
 
 }
-
-
-/* =========================================================
-   POPOLAMENTO CONFIGURAZIONE
-========================================================= */
 
 function populateConfiguration() {
 
@@ -1327,7 +1251,6 @@ function populateConfiguration() {
 
   const lesson =
     document.getElementById('lesson');
-
 
   configuration.teachers.forEach(
     function (item) {
@@ -1346,7 +1269,6 @@ function populateConfiguration() {
     }
   );
 
-
   getSubjects().forEach(
     function (name) {
 
@@ -1360,7 +1282,6 @@ function populateConfiguration() {
 
     }
   );
-
 
   configuration.lessons.forEach(
     function (name) {
@@ -1376,7 +1297,6 @@ function populateConfiguration() {
     }
   );
 
-
   teacher.addEventListener(
     'change',
     function () {
@@ -1391,7 +1311,6 @@ function populateConfiguration() {
           }
         );
 
-
       if (item) {
         subject.value =
           item.subject;
@@ -1399,24 +1318,20 @@ function populateConfiguration() {
         subject.value = '';
       }
 
-
       invalidateCalculation();
 
     }
   );
-
 
   subject.addEventListener(
     'change',
     invalidateCalculation
   );
 
-
   lesson.addEventListener(
     'change',
     invalidateCalculation
   );
-
 
   document.getElementById(
     'date'
@@ -1424,7 +1339,6 @@ function populateConfiguration() {
     'change',
     invalidateCalculation
   );
-
 
   document.getElementById(
     'title'
@@ -1434,7 +1348,6 @@ function populateConfiguration() {
   );
 
 }
-
 
 function getSubjects() {
 
@@ -1457,11 +1370,6 @@ function getSubjects() {
 
 }
 
-
-/* =========================================================
-   STUDENTI
-========================================================= */
-
 function renderStudents() {
 
   const container =
@@ -1469,9 +1377,7 @@ function renderStudents() {
       'studentContainer'
     );
 
-
   container.innerHTML = '';
-
 
   DEPARTMENTS.forEach(
     function (department) {
@@ -1481,27 +1387,21 @@ function renderStudents() {
           department
         ] || [];
 
-
       if (!names.length) {
         return;
       }
 
-
       const block =
         document.createElement('div');
-
 
       block.className =
         'department-input';
 
-
       const header =
         document.createElement('div');
 
-
       header.className =
         'department-input-header';
-
 
       header.innerHTML =
         '<span>' +
@@ -1511,9 +1411,7 @@ function renderStudents() {
         names.length +
         ' studenti</span>';
 
-
       block.appendChild(header);
-
 
       names.forEach(
         function (name) {
@@ -1528,17 +1426,14 @@ function renderStudents() {
         }
       );
 
-
       container.appendChild(block);
 
     }
   );
 
-
   updateSelectedCounter();
 
 }
-
 
 function createStudentRow(
   name,
@@ -1548,18 +1443,14 @@ function createStudentRow(
   const row =
     document.createElement('div');
 
-
   row.className =
     'student-row';
-
 
   row.dataset.name =
     name;
 
-
   row.dataset.department =
     department;
-
 
   row.innerHTML = `
 
@@ -1582,11 +1473,9 @@ function createStudentRow(
 
     </label>
 
-
     <div class="student-name">
       ${escapeHtml(name)}
     </div>
-
 
     <input
       class="student-grade"
@@ -1599,7 +1488,6 @@ function createStudentRow(
       disabled
     >
 
-
     <label class="partial-box">
 
       <input
@@ -1611,7 +1499,6 @@ function createStudentRow(
       <span>Parziale?</span>
 
     </label>
-
 
     <label class="lode-box">
 
@@ -1627,36 +1514,30 @@ function createStudentRow(
 
   `;
 
-
   const done =
     row.querySelector(
       '.student-done'
     );
-
 
   const grade =
     row.querySelector(
       '.student-grade'
     );
 
-
   const partial =
     row.querySelector(
       '.student-partial'
     );
-
 
   const praise =
     row.querySelector(
       '.student-praise'
     );
 
-
   const label =
     row.querySelector(
       '.done-label'
     );
-
 
   done.addEventListener(
     'change',
@@ -1665,30 +1546,24 @@ function createStudentRow(
       const enabled =
         done.checked;
 
-
       grade.disabled =
         !enabled;
-
 
       partial.disabled =
         !enabled;
 
-
       praise.disabled =
         !enabled;
-
 
       row.classList.toggle(
         'active',
         enabled
       );
 
-
       label.textContent =
         enabled
           ? 'Svolto'
           : 'Non svolto';
-
 
       if (!enabled) {
 
@@ -1702,36 +1577,30 @@ function createStudentRow(
 
       }
 
-
       updateSelectedCounter();
       invalidateCalculation();
 
     }
   );
 
-
   grade.addEventListener(
     'input',
     invalidateCalculation
   );
-
 
   partial.addEventListener(
     'change',
     invalidateCalculation
   );
 
-
   praise.addEventListener(
     'change',
     invalidateCalculation
   );
 
-
   return row;
 
 }
-
 
 function updateSelectedCounter() {
 
@@ -1739,7 +1608,6 @@ function updateSelectedCounter() {
     document.querySelectorAll(
       '.student-done:checked'
     ).length;
-
 
   document.getElementById(
     'selectedCounter'
@@ -1750,45 +1618,34 @@ function updateSelectedCounter() {
 
 }
 
-
-/* =========================================================
-   VALIDAZIONE
-========================================================= */
-
 function collectFormData() {
 
   clearError();
-
 
   const date =
     document.getElementById(
       'date'
     ).value;
 
-
   const teacher =
     document.getElementById(
       'teacher'
     ).value;
-
 
   const subject =
     document.getElementById(
       'subject'
     ).value;
 
-
   const lesson =
     document.getElementById(
       'lesson'
     ).value;
 
-
   const title =
     document.getElementById(
       'title'
     ).value.trim();
-
 
   if (!teacher) {
     throw new Error(
@@ -1796,13 +1653,11 @@ function collectFormData() {
     );
   }
 
-
   if (!date) {
     throw new Error(
       'Inserisci la data della lezione.'
     );
   }
-
 
   if (!subject) {
     throw new Error(
@@ -1810,13 +1665,11 @@ function collectFormData() {
     );
   }
 
-
   if (!lesson) {
     throw new Error(
       'Seleziona la lezione.'
     );
   }
-
 
   const validPair =
     configuration.teachers.some(
@@ -1830,7 +1683,6 @@ function collectFormData() {
       }
     );
 
-
   if (!validPair) {
 
     throw new Error(
@@ -1839,9 +1691,7 @@ function collectFormData() {
 
   }
 
-
   const students = [];
-
 
   document
     .querySelectorAll(
@@ -1855,42 +1705,29 @@ function collectFormData() {
             '.student-done'
           );
 
-
         if (!done.checked) {
           return;
         }
-
 
         const gradeValue =
           row.querySelector(
             '.student-grade'
           ).value;
 
-
         const partial =
           row.querySelector(
             '.student-partial'
           ).checked;
-
-
-        /*
-         * La checkbox funziona al contrario:
-         *
-         * SPENTA  = Completo
-         * ATTIVA  = Parziale
-         */
 
         const delivery =
           partial
             ? 'Parziale'
             : 'Completo';
 
-
         const praise =
           row.querySelector(
             '.student-praise'
           ).checked;
-
 
         if (
           gradeValue === ''
@@ -1904,21 +1741,8 @@ function collectFormData() {
 
         }
 
-
         const grade =
           Number(gradeValue);
-
-
-        /*
-         * I DECIMALI SONO AMMESSI.
-         *
-         * Esempi validi:
-         * 16
-         * 16.5
-         * 17.25
-         * 19.5
-         * 20
-         */
 
         if (
           !Number.isFinite(grade) ||
@@ -1933,7 +1757,6 @@ function collectFormData() {
           );
 
         }
-
 
         students.push({
 
@@ -1960,7 +1783,6 @@ function collectFormData() {
       }
     );
 
-
   if (!students.length) {
 
     throw new Error(
@@ -1968,7 +1790,6 @@ function collectFormData() {
     );
 
   }
-
 
   return {
 
@@ -1994,11 +1815,6 @@ function collectFormData() {
 
 }
 
-
-/* =========================================================
-   CALCOLI
-========================================================= */
-
 function calculateLesson() {
 
   try {
@@ -2006,12 +1822,10 @@ function calculateLesson() {
     const data =
       collectFormData();
 
-
     const departments =
       calculateDepartments(
         data.students
       );
-
 
     calculatedLesson = {
 
@@ -2022,29 +1836,24 @@ function calculateLesson() {
 
     };
 
-
     currentLessonId =
       'SALEM-' +
       Date.now() +
       '-' +
       randomId();
 
-
     renderDepartmentPreview();
     renderStudentPreview();
-
 
     switchTab(
       'departments'
     );
-
 
   } catch (error) {
 
     showError(
       error.message
     );
-
 
     switchTab(
       'input'
@@ -2053,7 +1862,6 @@ function calculateLesson() {
   }
 
 }
-
 
 function calculateDepartments(
   students
@@ -2075,7 +1883,6 @@ function calculateDepartments(
             }
           );
 
-
         const complete =
           all.filter(
             function (student) {
@@ -2087,7 +1894,6 @@ function calculateDepartments(
 
             }
           );
-
 
         const partial =
           all.filter(
@@ -2101,15 +1907,14 @@ function calculateDepartments(
             }
           );
 
-
         /*
          * MEDIA DI REPARTO
          *
          * - considera SOLO i completi
-         * - considera SOLO voti >= 16
-         * - 20 + lode vale 21
-         * - gli altri voti con lode mantengono
-         *   il proprio valore
+         * - la lode aggiunge +1 a QUALSIASI voto
+         * - considera SOLO voti EFFETTIVI >= 16
+         * - quindi 15 + lode = 16 ed entra nella media
+         * - 20 + lode = 21
          * - arrotondamento SEMPRE PER ECCESSO
          *   al primo decimale
          */
@@ -2125,10 +1930,8 @@ function calculateDepartments(
                   ...student,
 
                   effectiveGrade:
-                    student.grade === 20 &&
-                    student.praise
-                      ? 21
-                      : student.grade
+                    student.grade +
+                    (student.praise ? 1 : 0)
 
                 };
 
@@ -2146,9 +1949,7 @@ function calculateDepartments(
               }
             );
 
-
         let average = 0;
-
 
         if (
           validForAverage.length
@@ -2173,7 +1974,6 @@ function calculateDepartments(
 
             );
 
-
           average =
             Math.ceil(
               (
@@ -2184,7 +1984,6 @@ function calculateDepartments(
 
         }
 
-
         const praises =
           all.filter(
             function (student) {
@@ -2193,7 +1992,6 @@ function calculateDepartments(
 
             }
           ).length;
-
 
         const has21 =
           all.some(
@@ -2206,7 +2004,6 @@ function calculateDepartments(
 
             }
           );
-
 
         return {
 
@@ -2265,35 +2062,13 @@ function calculateDepartments(
       }
     );
 
-
-  /*
-   * CLASSIFICA MEDIA
-   *
-   * 1° valore distinto = 15
-   * 2° valore distinto = 5
-   */
-
   applyRankingBonus(
-
     results,
-
     'average',
-
     'bonusAverage',
-
     [15, 5],
-
     false
-
   );
-
-
-  /*
-   * PIÙ LODI
-   *
-   * reparto/i con più lodi = 5
-   * se nessuno ha lodi, nessun bonus
-   */
 
   const maxPraises =
     Math.max(
@@ -2303,7 +2078,6 @@ function calculateDepartments(
         }
       )
     );
-
 
   if (
     maxPraises > 0
@@ -2327,52 +2101,21 @@ function calculateDepartments(
 
   }
 
-
-  /*
-   * QUANTITÀ COMPITI
-   *
-   * 1° valore distinto = 10
-   * 2° valore distinto = 5
-   */
-
   applyRankingBonus(
-
     results,
-
     'assignments',
-
     'bonusQuantity',
-
     [10, 5],
-
     false
-
   );
-
-
-  /*
-   * CLASSIFICA COMPLETI
-   *
-   * 1° = 20
-   * 2° = 15
-   * 3° = 10
-   * 4° = 5
-   */
 
   applyRankingBonus(
-
     results,
-
     'complete',
-
     'bonusComplete',
-
     [20, 15, 10, 5],
-
     true
-
   );
-
 
   results.forEach(
     function (result) {
@@ -2401,11 +2144,9 @@ function calculateDepartments(
     }
   );
 
-
   return results;
 
 }
-
 
 function applyRankingBonus(
   results,
@@ -2428,7 +2169,6 @@ function applyRankingBonus(
       }
     );
 
-
   if (!includeZero) {
 
     values =
@@ -2442,7 +2182,6 @@ function applyRankingBonus(
 
   }
 
-
   const distinct =
     [...new Set(values)]
       .sort(
@@ -2451,7 +2190,6 @@ function applyRankingBonus(
         }
       );
 
-
   results.forEach(
     function (result) {
 
@@ -2459,7 +2197,6 @@ function applyRankingBonus(
         Number(
           result[valueKey]
         ) || 0;
-
 
       if (
         !includeZero &&
@@ -2473,12 +2210,10 @@ function applyRankingBonus(
 
       }
 
-
       const position =
         distinct.indexOf(
           value
         );
-
 
       result[bonusKey] =
         position >= 0 &&
@@ -2490,7 +2225,6 @@ function applyRankingBonus(
   );
 
 }
-
 
 function roundPoint(value) {
 
@@ -2505,26 +2239,18 @@ function roundPoint(value) {
 
 }
 
-
-/* =========================================================
-   PREVIEW REPARTI
-========================================================= */
-
 function renderDepartmentPreview() {
 
   const lesson =
     calculatedLesson;
 
-
   document.getElementById(
     'departmentPreviewEmpty'
   ).hidden = true;
 
-
   document.getElementById(
     'departmentPreview'
   ).hidden = false;
-
 
   document.getElementById(
     'departmentPreviewTitle'
@@ -2533,21 +2259,17 @@ function renderDepartmentPreview() {
       ? lesson.title
       : 'Punti della lezione';
 
-
   document.getElementById(
     'departmentPreviewMeta'
   ).textContent =
     buildMeta(lesson);
-
 
   const cards =
     document.getElementById(
       'departmentCards'
     );
 
-
   cards.innerHTML = '';
-
 
   lesson.departments.forEach(
     function (dep) {
@@ -2557,10 +2279,8 @@ function renderDepartmentPreview() {
           'div'
         );
 
-
       card.className =
         'department-card';
-
 
       card.innerHTML = `
 
@@ -2578,12 +2298,10 @@ function renderDepartmentPreview() {
 
       `;
 
-
       cards.appendChild(card);
 
     }
   );
-
 
   const rows = [
 
@@ -2634,15 +2352,12 @@ function renderDepartmentPreview() {
 
   ];
 
-
   const tbody =
     document.getElementById(
       'scoreTableBody'
     );
 
-
   tbody.innerHTML = '';
-
 
   rows.forEach(
     function (rowInfo) {
@@ -2651,7 +2366,6 @@ function renderDepartmentPreview() {
         document.createElement(
           'tr'
         );
-
 
       if (
         rowInfo[1] ===
@@ -2662,7 +2376,6 @@ function renderDepartmentPreview() {
           'total-row';
 
       }
-
 
       const cells =
         lesson.departments.map(
@@ -2676,7 +2389,6 @@ function renderDepartmentPreview() {
 
           }
         );
-
 
       tr.innerHTML =
         '<td>' +
@@ -2699,7 +2411,6 @@ function renderDepartmentPreview() {
           )
           .join('');
 
-
       tbody.appendChild(tr);
 
     }
@@ -2707,26 +2418,18 @@ function renderDepartmentPreview() {
 
 }
 
-
-/* =========================================================
-   PREVIEW STUDENTI
-========================================================= */
-
 function renderStudentPreview() {
 
   const lesson =
     calculatedLesson;
 
-
   document.getElementById(
     'studentPreviewEmpty'
   ).hidden = true;
 
-
   document.getElementById(
     'studentPreview'
   ).hidden = false;
-
 
   document.getElementById(
     'studentPreviewTitle'
@@ -2735,21 +2438,17 @@ function renderStudentPreview() {
       ? 'Voti – ' + lesson.title
       : 'Voti – ' + lesson.lesson;
 
-
   document.getElementById(
     'studentPreviewMeta'
   ).textContent =
     buildMeta(lesson);
-
 
   const container =
     document.getElementById(
       'studentPreviewDepartments'
     );
 
-
   container.innerHTML = '';
-
 
   DEPARTMENTS.forEach(
     function (department) {
@@ -2766,36 +2465,29 @@ function renderStudentPreview() {
           }
         );
 
-
       if (!students.length) {
         return;
       }
-
 
       const block =
         document.createElement(
           'div'
         );
 
-
       block.className =
         'preview-department';
-
 
       const title =
         document.createElement(
           'h3'
         );
 
-
       title.textContent =
         department;
-
 
       block.appendChild(
         title
       );
-
 
       students.forEach(
         function (student) {
@@ -2805,36 +2497,33 @@ function renderStudentPreview() {
               'div'
             );
 
-
           row.className =
             'preview-student';
-
 
           let gradeDisplay =
             formatNumber(
               student.grade
             );
 
+          /*
+           * Qualsiasi lode aggiunge +1
+           * anche nell'anteprima.
+           *
+           * 5 + lode  = 6★
+           * 15 + lode = 16★
+           * 20 + lode = 21★
+           */
 
           if (
-            student.grade === 20 &&
-            student.praise
-          ) {
-
-            gradeDisplay =
-              '21★';
-
-          } else if (
             student.praise
           ) {
 
             gradeDisplay =
               formatNumber(
-                student.grade
+                student.grade + 1
               ) + '★';
 
           }
-
 
           const info = [
 
@@ -2843,7 +2532,6 @@ function renderStudentPreview() {
               .toLowerCase()
 
           ];
-
 
           if (
             student.praise
@@ -2854,7 +2542,6 @@ function renderStudentPreview() {
             );
 
           }
-
 
           row.innerHTML = `
 
@@ -2876,14 +2563,12 @@ function renderStudentPreview() {
 
           `;
 
-
           block.appendChild(
             row
           );
 
         }
       );
-
 
       container.appendChild(
         block
@@ -2893,11 +2578,6 @@ function renderStudentPreview() {
   );
 
 }
-
-
-/* =========================================================
-   SALVATAGGIO
-========================================================= */
 
 async function saveLesson() {
 
@@ -2913,20 +2593,16 @@ async function saveLesson() {
 
   }
 
-
   const button =
     document.getElementById(
       'saveButton'
     );
 
-
   button.disabled =
     true;
 
-
   button.textContent =
     'Registrazione...';
-
 
   const payload = {
 
@@ -2959,7 +2635,6 @@ async function saveLesson() {
 
   };
 
-
   try {
 
     const response =
@@ -2988,7 +2663,6 @@ async function saveLesson() {
         }
       );
 
-
     if (!response.ok) {
 
       throw new Error(
@@ -2997,10 +2671,8 @@ async function saveLesson() {
 
     }
 
-
     const result =
       await response.json();
-
 
     if (!result.ok) {
 
@@ -3010,7 +2682,6 @@ async function saveLesson() {
       );
 
     }
-
 
     if (
       result.duplicate
@@ -3032,26 +2703,14 @@ async function saveLesson() {
 
     }
 
-
     button.textContent =
       'Lezione registrata ✓';
-
 
     switchTab(
       'input'
     );
 
-
   } catch (error) {
-
-    /*
-     * Manteniamo lo stesso lessonId.
-     *
-     * Se Apps Script avesse salvato
-     * correttamente ma la risposta
-     * fosse andata persa, un nuovo
-     * tentativo non creerà doppioni.
-     */
 
     showError(
       'Non sono riuscita a confermare la registrazione: ' +
@@ -3059,15 +2718,12 @@ async function saveLesson() {
       ' Puoi riprovare senza rischio di creare un doppione.'
     );
 
-
     switchTab(
       'input'
     );
 
-
     button.disabled =
       false;
-
 
     button.textContent =
       'Registra lezione';
@@ -3075,11 +2731,6 @@ async function saveLesson() {
   }
 
 }
-
-
-/* =========================================================
-   TABS E PULSANTI
-========================================================= */
 
 function setupTabs() {
 
@@ -3106,7 +2757,6 @@ function setupTabs() {
 
 }
 
-
 function switchTab(name) {
 
   document
@@ -3128,7 +2778,6 @@ function switchTab(name) {
       }
     );
 
-
   document
     .querySelectorAll(
       '.tab-panel'
@@ -3148,7 +2797,6 @@ function switchTab(name) {
       }
     );
 
-
   window.scrollTo({
 
     top: 0,
@@ -3160,7 +2808,6 @@ function switchTab(name) {
 
 }
 
-
 function setupButtons() {
 
   document.getElementById(
@@ -3169,7 +2816,6 @@ function setupButtons() {
     'click',
     calculateLesson
   );
-
 
   document.getElementById(
     'backToInputFromDepartments'
@@ -3184,7 +2830,6 @@ function setupButtons() {
     }
   );
 
-
   document.getElementById(
     'goStudents'
   ).addEventListener(
@@ -3197,7 +2842,6 @@ function setupButtons() {
 
     }
   );
-
 
   document.getElementById(
     'backToInputFromStudents'
@@ -3212,7 +2856,6 @@ function setupButtons() {
     }
   );
 
-
   document.getElementById(
     'backDepartments'
   ).addEventListener(
@@ -3226,7 +2869,6 @@ function setupButtons() {
     }
   );
 
-
   document.getElementById(
     'saveButton'
   ).addEventListener(
@@ -3236,62 +2878,47 @@ function setupButtons() {
 
 }
 
-
-/* =========================================================
-   UTILITÀ
-========================================================= */
-
 function invalidateCalculation() {
 
   calculatedLesson =
     null;
 
-
   currentLessonId =
     null;
-
 
   document.getElementById(
     'departmentPreviewEmpty'
   ).hidden = false;
 
-
   document.getElementById(
     'departmentPreview'
   ).hidden = true;
-
 
   document.getElementById(
     'studentPreviewEmpty'
   ).hidden = false;
 
-
   document.getElementById(
     'studentPreview'
   ).hidden = true;
-
 
   const button =
     document.getElementById(
       'saveButton'
     );
 
-
   button.disabled =
     false;
-
 
   button.textContent =
     'Registra lezione';
 
 }
 
-
 function setToday() {
 
   const now =
     new Date();
-
 
   const local =
     new Date(
@@ -3299,7 +2926,6 @@ function setToday() {
       now.getTimezoneOffset() *
       60000
     );
-
 
   document.getElementById(
     'date'
@@ -3309,7 +2935,6 @@ function setToday() {
       .slice(0, 10);
 
 }
-
 
 function buildMeta(lesson) {
 
@@ -3329,13 +2954,11 @@ function buildMeta(lesson) {
 
 }
 
-
 function formatDate(value) {
 
   const parts =
     String(value)
       .split('-');
-
 
   if (
     parts.length !== 3
@@ -3344,7 +2967,6 @@ function formatDate(value) {
     return value;
 
   }
-
 
   return (
     parts[2] +
@@ -3356,12 +2978,10 @@ function formatDate(value) {
 
 }
 
-
 function formatNumber(value) {
 
   const number =
     Number(value);
-
 
   if (
     !Number.isFinite(
@@ -3373,7 +2993,6 @@ function formatNumber(value) {
 
   }
 
-
   return number.toLocaleString(
     'it-IT',
     {
@@ -3382,7 +3001,6 @@ function formatNumber(value) {
   );
 
 }
-
 
 function randomId() {
 
@@ -3397,7 +3015,6 @@ function randomId() {
 
   }
 
-
   return (
 
     Math.random()
@@ -3411,7 +3028,6 @@ function randomId() {
 
 }
 
-
 function showError(message) {
 
   const box =
@@ -3419,15 +3035,12 @@ function showError(message) {
       'formError'
     );
 
-
   box.textContent =
     message;
-
 
   box.classList.add(
     'show'
   );
-
 
   document.getElementById(
     'successBox'
@@ -3436,7 +3049,6 @@ function showError(message) {
   );
 
 }
-
 
 function clearError() {
 
@@ -3448,28 +3060,23 @@ function clearError() {
 
 }
 
-
 function showSuccess(message) {
 
   clearError();
-
 
   const box =
     document.getElementById(
       'successBox'
     );
 
-
   box.textContent =
     message;
-
 
   box.classList.add(
     'show'
   );
 
 }
-
 
 function escapeHtml(value) {
 
